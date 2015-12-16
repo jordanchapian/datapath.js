@@ -1,0 +1,2 @@
+(function(Datasync){
+	'use strict';

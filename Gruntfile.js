@@ -1,23 +1,30 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    jshint: {
-      files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
-      options: {
-        globals: {
-          jQuery: true
-        }
+    concat: {
+      globalBuild: {
+        src: [
+          './src/env_intro.js',
+          './src/datasync/*.js',
+          './src/env_outro_global.js'
+        ],
+        dest: 'build/datasync_global.js'
+      },
+      isolateBuild:{
+        src: [
+          './src/env_intro.js',
+          './src/datasync/*.js',
+          './src/env_outro_isolate.js'
+        ],
+        dest: 'build/datasync_isolate.js'
       }
-    },
-    watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('default', ['jshint']);
-
+  grunt.registerTask('default', ['concat']);
+  grunt.registerTask('dev', ['watch']);
 };
