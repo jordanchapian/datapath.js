@@ -1,20 +1,66 @@
 var Datasync = {
 	_:{
+
+		info:{
+			version:'0.0.1',
+			
+		},
+
+		log:{},
+
 		factories:{
 			pipeline:{}
 		},
-		state:{
 
+		state:{
+			dataset:{}
 		},
-		util:{
-			is:{}
-		}
+
+		util:{},
+
+		option:{}
 	}
 };
 
+/*===============================
+=            Options            =
+===============================*/
+
+Datasync._.option.log = {
+	logPrefix:'datasync::-',
+	logEnabled:true
+};
+
+
+/*=====  End of Options  ======*/
+
+
+
+(function(){
+
+	_addDataset = function(key, path){
+		//report any potential issues
+		if(datapath[key]){
+			console.warn('Warning, attempting to overwrite a datapath with [key = '+key+'][path = '+path+']');
+		}
+
+		datapath[key] = path;
+	};
+
+	//public exposed method
+	Datasync.addDataset = function(datapath){
+		return {
+			as:function(key){
+				_addDatapath(key, datapath);
+			}
+		}
+	};
+
+})();
 /*================================
 =            Pipeline            =
 ================================*/
+
 /*----------  Formatter  ----------*/
 
 (function(){
@@ -38,12 +84,49 @@ var Datasync = {
 
 /*=====  End of Pipeline  ======*/
 
+/*===============================
+=            Logging            =
+===============================*/
+(function(){
+	
+	Datasync._.info = {};
+
+	Datasync._.info.warn = function(message){
+		if(!canSendLog())return;
+		//carry through with request, appending prefix to message
+		console.warn( Datasync._.option.log.logPrefix + '  ' + message );
+	};
+
+	Datasync._.info.error = function(message){
+		if(!canSendLog())return;
+		//carry through with request, appending prefix to message
+		console.error( Datasync._.option.log.logPrefix + '  ' + message );
+	};
+
+	Datasync._.info.log = function(message){
+		if(!canSendLog())return;
+		//carry through with request, appending prefix to message
+		console.log( Datasync._.option.log.logPrefix + '  ' + message );
+	};
+
+	function canSendLog(message){
+		//Check if we have logging enabled
+		if(Datasync._.option.log.logEnabled === false) return false;
+		//check to see if this is a valid message
+		else if(!Datasync._.util.is.String(message)) return false;
+	}
+
+})();
+
+/*=====  End of Logging  ======*/
+
 
 /*=============================
 =            Utils            =
 =============================*/
 
 /*----------  Type Checking  ----------*/
+Datasync._.util.is = {};
 
 Datasync._.util.is.Integer = function(val) {
 	return isNumber(val) && Math.floor(val) == val;
