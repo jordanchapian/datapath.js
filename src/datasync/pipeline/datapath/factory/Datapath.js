@@ -1,13 +1,14 @@
 (function(datapathFactories, info){
 
-	function Datapath(){
+	function Datapath(key, routeTemplate){
 
 		//create instance memory for pipeline input
 		this._pipeline = {
 			formatter:null,
 			filler:[],
 			subset:[],
-			transform:[]
+			transform:[],
+			route: (new datapathFactories.VirtualRoute(routeTemplate))
 		};
 
 	}
@@ -121,6 +122,42 @@
 	Datapath.prototype.addTransform = function(){
 		return this;
 	};
+
+
+	/*----------  utilities  ----------*/
+	// function getRequestedParams(route){
+	// 		return route.match(/:[\w\d]+/g);
+	// 	}	
+	// 	function fillInQueryParams(route){
+	// 		return route;
+	// 	}
+	// 	function requiredQueryParams(route){
+	// 		return _.map(getRequestedParams((route.split('?')[1] || '')), function(e){return e.slice(1);});
+	// 	}
+
+	// 	function requiredRouteParams(route){
+	// 		return _.map(getRequestedParams(route.split('?')[0]), function(e){return e.slice(1);});
+	// 	}
+	// function getDynamicQueryParameters(routeTemplate){
+	// 	var queryComponent = routeTemplate.split('?')[1];
+
+	// 	if(queryComponent === undefined) return [];
+	// }
+	// function getStaticQueryParameters(routeTemplate){
+	// 	var output = {};
+	// 	var re = /[&|?]([\w\d]+)=([^&.]+)/g;
+	// 	var match;
+	// 	while(match = re.exec(route)){
+	// 		if(!output[match[1]])output[match[1]] = match[2];
+	// 		else if(!_.isArray(output[match[1]]))output[match[1]] = [output[match[1]], match[2]];
+	// 		else output[match[1]].push(match[2]);
+	// 	}
+
+	// 	return output;
+	// }
+	// function getDynamicRouteParameters(routeTemplate){
+	// 	return _.map(getRequestedParams((route.split('?')[1] || '')), function(e){return e.slice(1);});
+	// }
 
 	//alias this class in factories
 	datapathFactories.Datapath = Datapath;

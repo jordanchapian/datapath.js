@@ -1,4 +1,4 @@
-(function(publicApi, is, info, undefined){
+(function(publicApi, is, datapathFactories, info, undefined){
 
 	//add datapath single level
 	var _addDatapath = function(pathTemplate, pathKey){
@@ -12,6 +12,8 @@
 		}
 
 		//take action
+		// (new )
+		(new datapathFactories.Datapath(pathKey, pathTemplate));
 	};
 	//multi-level datapath adder
 	var _addDatapath_ML = function(pathTemplate){
@@ -45,4 +47,5 @@
 })(
 	_public(), 
 	_private('util.is'),
+	_private('pipeline.datapath.factory'),
 	_private('info'));
