@@ -52,6 +52,6 @@
 	_public(), 
 	_private('state.pipeline'),
 	_private('util.is'),
-	_private('pipeline.datapath.factory'),
+	_private('datapath.factory'),
 	_private('info')
 );

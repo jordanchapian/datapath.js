@@ -10,6 +10,6 @@
 	subsetFactories.Subset = Subset;
 
 })(
-	_private('pipeline.subset.factory'), 
+	_private('datapath.pipeline.subset.factory'), 
 	_public()
 );

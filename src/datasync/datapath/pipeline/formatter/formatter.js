@@ -8,4 +8,4 @@
 	//alias this class in factories
 	formatterFactories.Formatter = Formatter;
 
-})(_private('pipeline.formatter.factory'), _private(), _public());
+})(_private('datapath.pipeline.formatter.factory'), _private(), _public());

@@ -10,6 +10,6 @@
 	transformFactories.Transform = Transform;
 
 })(
-	_private('pipeline.transform.factory'), 
+	_private('datapath.pipeline.transform.factory'), 
 	_public()
 );

@@ -10,7 +10,7 @@
 	fillerFactories.Filler = Filler;
 
 })(
-	_private('pipeline.filler.factory'), 
+	_private('datapath.pipeline.filler.factory'), 
 	_private(), 
 	_public()
 );

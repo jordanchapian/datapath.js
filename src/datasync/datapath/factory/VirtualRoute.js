@@ -75,7 +75,7 @@
 	datapathFactories.VirtualRoute = VirtualRoute;
 
 })(
-	_private('pipeline.datapath.factory'), 
+	_private('datapath.factory'), 
 	_private('info'),
 	_private('util.is')
 );
