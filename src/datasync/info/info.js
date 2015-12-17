@@ -1,4 +1,4 @@
-(function(info, logOptions, is){
+(function(info, logOptions, is, undefined){
 
 	info.warn = function(message){
 		if(!canSendLog(message))return;
@@ -29,4 +29,5 @@
 })(
 	_private('info'),
 	_private('option.log'), 
-	_private('util.is'));
+	_private('util.is')
+);

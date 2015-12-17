@@ -1,6 +1,6 @@
 (function(logOption){
 
-	logOption.logPrefix = 'datasync::-';
+	logOption.logPrefix = 'Datasync::';
 	logOption.logEnabled = true;
 	
 })(_private('option.log'));

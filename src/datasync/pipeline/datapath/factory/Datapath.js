@@ -1,4 +1,4 @@
-(function(datapathFactories, fillerFactories, formatterFactories, is, info){
+(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, is, info){
 
 	function Datapath(key, routeTemplate){
 
@@ -7,10 +7,10 @@
 			formatter:null,
 			filler:[],
 			subset:[],
-			transform:[],
-			route: (new datapathFactories.VirtualRoute(routeTemplate))
+			transform:[]
 		};
 
+		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
 	}
 
 	//TODO:remove this...
@@ -60,8 +60,6 @@
 	};
 
 	Datapath.prototype.addFiller = function(fn){
-		//1] defend the input
-
 		//Are there any arguments?
 		if(fn === undefined){
 			info.warn("Calling [Datapath].addFiller with no arguments. No action was taken.");
@@ -88,15 +86,24 @@
 
 	function addSubset_ml(self, name){
 		return function(fn){
-			//what is the scope here?? TODO: test if i actually need self.
-			return addSubset(name, fn);
+			return addSubset(self, name, fn);
 		};
 	}
 
 	//single level add API (Used by multilevel)
 	function addSubset(self, name, fn){
-		console.log('single level add')
+		//defend input
+		if(is.String(name) === false){
+			info.warn('Attempting to add a subset with an identifier that is not a string. The request was ignored. Operation will not be as expected.');
+			return self;
+		}
+		else if(is.Function(fn) === false){
+			info.warn('Attempting to add a subset['+name+'] with an invalid predicate. Expecting a predicate of type [Function]');
+			return self;
+		}
 
+		//take action
+		self._pipeline.subset.push(new subsetFactories.Subset(name, fn));
 		return self;
 	}
 
@@ -118,54 +125,59 @@
 	};
 
 	/*----------  Transform Operation  ----------*/
-	
-	Datapath.prototype.addTransform = function(){
-		return this;
+
+	function addTransform_ml(self, name){
+		return function(fn){
+			return addTransform(self, name, fn);
+		};
+	}
+
+	//single level add API (Used by multilevel)
+	function addTransform(self, name, fn){
+		//defend input
+		if(is.String(name) === false){
+			info.warn('Attempting to add a transform with an identifier that is not a string. The request was ignored. Operation will not be as expected.');
+			return self;
+		}
+		else if(is.Function(fn) === false){
+			info.warn('Attempting to add a transform['+name+'] with an invalid transform. Expecting a transform of type [Function]');
+			return self;
+		}
+
+		//take action
+		self._pipeline.transform.push(new transformFactories.Transform(name, fn));
+		return self;
+	}
+
+	//add public facing interface
+	Datapath.prototype.addTransform = function(name, fn){
+
+		//do we have valid input?
+		if(name === undefined){
+			info.warn("Calling [Datapath].addTransform with no arguments. No action was taken.");
+			return this;
+		}
+		//are we using single level accessor?
+		else if(fn !== undefined)
+			return addTransform(this, name, fn);
+		//they must want a multi-level accessor
+		else
+			return addTransform_ml(this, name);
+
 	};
 
 
 	/*----------  utilities  ----------*/
-	// function getRequestedParams(route){
-	// 		return route.match(/:[\w\d]+/g);
-	// 	}	
-	// 	function fillInQueryParams(route){
-	// 		return route;
-	// 	}
-	// 	function requiredQueryParams(route){
-	// 		return _.map(getRequestedParams((route.split('?')[1] || '')), function(e){return e.slice(1);});
-	// 	}
-
-	// 	function requiredRouteParams(route){
-	// 		return _.map(getRequestedParams(route.split('?')[0]), function(e){return e.slice(1);});
-	// 	}
-	// function getDynamicQueryParameters(routeTemplate){
-	// 	var queryComponent = routeTemplate.split('?')[1];
-
-	// 	if(queryComponent === undefined) return [];
-	// }
-	// function getStaticQueryParameters(routeTemplate){
-	// 	var output = {};
-	// 	var re = /[&|?]([\w\d]+)=([^&.]+)/g;
-	// 	var match;
-	// 	while(match = re.exec(route)){
-	// 		if(!output[match[1]])output[match[1]] = match[2];
-	// 		else if(!_.isArray(output[match[1]]))output[match[1]] = [output[match[1]], match[2]];
-	// 		else output[match[1]].push(match[2]);
-	// 	}
-
-	// 	return output;
-	// }
-	// function getDynamicRouteParameters(routeTemplate){
-	// 	return _.map(getRequestedParams((route.split('?')[1] || '')), function(e){return e.slice(1);});
-	// }
-
+	
 	//alias this class in factories
 	datapathFactories.Datapath = Datapath;
 
 })(
 	_private('pipeline.datapath.factory'), 
 	_private('pipeline.filler.factory'), 
-	_private('pipeline.formatter.factory'), 
+	_private('pipeline.formatter.factory'),
+	_private('pipeline.subset.factory'),
+	_private('pipeline.transform.factory'),  
 	_private('util.is'),
 	_private('info')
 );
