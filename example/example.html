@@ -21,9 +21,15 @@
 		.addFormatter(function(e){
 			console.log(e);
 		})
+		
 		.addFiller(function(dataset){
 			console.log(dataset);
 			//return some array to be concat to dataset
+
+		})
+
+		.addSubset('name')(
+		function(){
 
 		});
 

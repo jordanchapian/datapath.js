@@ -85,20 +85,20 @@
 	/*----------  Subset Operations  ----------*/
 	
 	//multi level add API
-	Datapath.prototype._.addSubsetML = function(subsetName){
-		var self = this;
+
+	function addSubset_ml(self, name){
 		return function(fn){
 			//what is the scope here?? TODO: test if i actually need self.
-			return self._.addSubset(subsetName, fn);
+			return addSubset(name, fn);
 		};
-	};
+	}
 
 	//single level add API (Used by multilevel)
-	Datapath.prototype._.addSubset = function(subsetName, fn){
-		//some actions here
+	function addSubset(self, name, fn){
+		console.log('single level add')
 
-		return this;
-	};
+		return self;
+	}
 
 	//add public facing interface
 	Datapath.prototype.addSubset = function(subsetName, fn){
@@ -110,10 +110,10 @@
 		}
 		//are we using single level accessor?
 		else if(fn !== undefined)
-			return this._.addSubset(subsetName, fn);
+			return addSubset(this, subsetName, fn);
 		//they must want a multi-level accessor
 		else
-			return this._addSubsetML(subsetName);
+			return addSubset_ml(this, subsetName);
 
 	};
 
