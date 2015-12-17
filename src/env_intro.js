@@ -7,27 +7,27 @@
 	/*==================================
 	=            Namespaces            =
 	==================================*/
+
+	//TODO: make this a hash, and just expose public in outro
 	function _namespace(str, root) {
+		if(str === undefined)return root;
+
 		var chunks = str.split('.');
-		if(!root)
-			root = window;
 		var current = root;
 		for(var i = 0; i < chunks.length; i++) {
 			if (!current.hasOwnProperty(chunks[i]))
 				current[chunks[i]] = {};
 			current = current[chunks[i]];
 		}
+		
 		return current;
 	}
 
-	function public(str){
+	function _public(str){
 		return _namespace(str, publicAPI);
 	}
 
-	function private(str){
+	function _private(str){
 		return _namespace(str, privateAPI);
 	}
 	/*=====  End of Namespaces  ======*/
-
-
-};

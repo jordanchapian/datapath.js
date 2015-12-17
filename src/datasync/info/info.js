@@ -1,29 +1,32 @@
-(function(info, undefined){
+(function(info, logOptions, is){
 
-
-	Datasync._.info.warn = function(message){
-		if(!canSendLog())return;
+	info.warn = function(message){
+		if(!canSendLog(message))return;
 		//carry through with request, appending prefix to message
-		console.warn( Datasync._.option.log.logPrefix + '  ' + message );
+		console.warn( logOptions.logPrefix + '  ' + message );
 	};
 
-	Datasync._.info.error = function(message){
-		if(!canSendLog())return;
+	info.error = function(message){
+		if(!canSendLog(message))return;
 		//carry through with request, appending prefix to message
-		console.error( Datasync._.option.log.logPrefix + '  ' + message );
+		console.error( logOptions.logPrefix + '  ' + message );
 	};
 
-	Datasync._.info.log = function(message){
-		if(!canSendLog())return;
+	info.log = function(message){
+		if(!canSendLog(message))return;
 		//carry through with request, appending prefix to message
-		console.log( Datasync._.option.log.logPrefix + '  ' + message );
+		console.log( logOptions.logPrefix + '  ' + message );
 	};
 
 	function canSendLog(message){
 		//Check if we have logging enabled
-		if(Datasync._.option.log.logEnabled === false) return false;
+		if(logOptions.logEnabled === false) return false;
 		//check to see if this is a valid message
-		else if(!Datasync._.util.is.String(message)) return false;
+		else if(!is.String(message)) return false;
+		else return true;
 	}
 
-})();
+})(
+	_private('info'),
+	_private('option.log'), 
+	_private('util.is'));

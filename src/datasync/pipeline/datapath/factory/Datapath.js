@@ -1,4 +1,4 @@
-(function(){
+(function(datapathFactories, info){
 
 	function Datapath(){
 
@@ -28,19 +28,19 @@
 
 		//Are there any arguments?
 		if(fn === undefined){
-			Datasync._.info.warn("Calling [Datapath].addFormatter with no arguments. No action was taken.");
+			info.warn("Calling [Datapath].addFormatter with no arguments. No action was taken.");
 
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
 		else if(Datasync._.util.is.Function(fn) === false){
-			Datasync._.info.warn("Calling [Datapath].addFormatter an argument other than a function. No action was taken.");
+			info.warn("Calling [Datapath].addFormatter an argument other than a function. No action was taken.");
 
 			return this;
 		}
 		//is the user attempting to overwrite a previously defined formatter on this datapath?
 		else if(this._pipeline.formatter !== null){
-			Datasync._.info.warn("Calling [Datapath].addFormatter caused Datasync to overwrite a formatter. Action was taken.");
+			info.warn("Calling [Datapath].addFormatter caused Datasync to overwrite a formatter. Action was taken.");
 		}
 
 		//2] take the action
@@ -63,19 +63,19 @@
 
 		//Are there any arguments?
 		if(fn === undefined){
-			Datasync._.info.warn("Calling [Datapath].addFiller with no arguments. No action was taken.");
+			info.warn("Calling [Datapath].addFiller with no arguments. No action was taken.");
 
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
-		else if(Datasync._.util.is.Function(fn) === false){
-			Datasync._.info.warn("Calling [Datapath].addFiller an argument other than a function. No action was taken.");
+		else if(internalApi.util.is.Function(fn) === false){
+			info.warn("Calling [Datapath].addFiller an argument other than a function. No action was taken.");
 
 			return this;
 		}
 
 		//2] take the action
-		this._pipeline.filler.push(new Datasync.factory.Filler(fn));
+		// this._pipeline.filler.push();
 
 		return this;
 	};
@@ -104,7 +104,7 @@
 
 		//do we have valid input?
 		if(subsetName === undefined){
-			Datasync._.info.warn("Calling [Datapath].addSubset with no arguments. No action was taken.");
+			info.warn("Calling [Datapath].addSubset with no arguments. No action was taken.");
 			return this;
 		}
 		//are we using single level accessor?
@@ -116,40 +116,16 @@
 
 	};
 
-
 	/*----------  Transform Operation  ----------*/
 	
 	Datapath.prototype.addTransform = function(){
-		
 		return this;
 	};
 
-
 	//alias this class in factories
-	Datasync.factory.Datapath = Datapath;
+	datapathFactories.Datapath = Datapath;
 
-	//public interfaces
-	var _addDatapath = function(pathTemplate, pathKey){
-
-	};
-	Datasync.addDatapath = function(pathTemplate){
-		return {
-				as:function(pathKey){
-					if(pathTemplate === undefined || Datasync._.util.is.String(pathTemplate) === false
-							|| pathKey === undefined || Datasync._.util.is.String(pathKey) === false){
-
-						Datasync._.info.error('Input format for addDatapath is invalid. No recovery.');
-						return;
-					}
-
-					//TODO:map vs array?? would need to be map.
-					Datasync._.state.dataset.push((new Datasync.factory.Datapath(pathTemplate, pathKey)));
-				}
-			}
-	};
-
-	Datasync.datapath = function(key){
-
-	};
-
-})();
+})(
+	_private('pipeline.datapath.factory'), 
+	_private('info')
+);

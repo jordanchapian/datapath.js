@@ -1,37 +1,40 @@
-(function(){
-	
-	Datasync._.util.is = {};
+(function(is){
 
-	Datasync._.util.is.Integer = function(val) {
+	is.Integer = function(val) {
 		return (isNumber(val) && Math.floor(val) == val);
 	};
 
-	Datasync._.util.is.Number = function(val) {
+	is.Undefined = function(obj){
+		return obj === void 0;
+	};
+
+	is.Number = function(val) {
 		return (typeof val == "number");
 	};
 
-	Datasync._.util.is.String = function(){
-		return (typeof val == "string");
+	is.String = function(obj){
+		return (typeof obj == "string");
 	};
 
-	Datasync._.util.is.Boolean = function(val) {
-		return (typeof val == "boolean");
+	is.Boolean = function(obj) {
+		return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
 	};
 
-	Datasync._.util.is.Object = function(val) {
-		return (typeof val == "object" && val !== null);
+	is.Object = function(obj) {
+		var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
 	};
 
-	Datasync._.util.is.Array = function(val) {
+	is.Array = function(val) {
 		return (val instanceof Array);
 	};
 
-	Datasync._.util.is.Function = function(val) {
+	is.Function = function(val) {
 		return (typeof val == "function");
 	};
 
-	Datasync._.util.is.Date = function(val) {
+	is.Date = function(val) {
 		return (Object.prototype.toString.call(val) === "[object Date]");
 	};
 
-})();
+})(_private('util.is'));

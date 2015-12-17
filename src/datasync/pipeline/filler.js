@@ -1,5 +1,6 @@
-(function(){
-	
+(function(fillerFactories, internalApi, publicApi){
+
+	console.log(publicApi);
 	function Filler(fn){
 		//defend input
 
@@ -7,6 +8,6 @@
 
 
 	//alias this class in factories
-	Datasync.factory.Filler = Filler;
+	fillerFactories.Filler = Filler;
 
-})();
+})(_private('pipeline.filler.factory'), _private(), _public());
