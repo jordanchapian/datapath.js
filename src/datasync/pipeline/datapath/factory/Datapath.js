@@ -1,13 +1,16 @@
-(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, is, info){
+(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, is, set, info){
 
 	function Datapath(key, routeTemplate){
 
 		//instance memory
 		this._pipeline = {
+			//unnamed pipeline steps
 			formatter:null,
 			filler:[],
-			subset:[],
-			transform:[]
+
+			//named pipeline steps
+			subset:{},
+			transform:{}
 		};
 
 		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
@@ -103,7 +106,8 @@
 		}
 
 		//take action
-		self._pipeline.subset.push(new subsetFactories.Subset(name, fn));
+		self._pipeline.subset[name] = (new subsetFactories.Subset(name, fn));
+		
 		return self;
 	}
 
@@ -145,7 +149,8 @@
 		}
 
 		//take action
-		self._pipeline.transform.push(new transformFactories.Transform(name, fn));
+		self._pipeline.transform[name] = (new transformFactories.Transform(name, fn));
+
 		return self;
 	}
 
@@ -179,5 +184,6 @@
 	_private('pipeline.subset.factory'),
 	_private('pipeline.transform.factory'),  
 	_private('util.is'),
+	_private('util.set'),
 	_private('info')
 );

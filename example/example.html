@@ -14,7 +14,7 @@
 		.addDatapath('/api/path/to/:entity?me=true&test=:query&entity=:entity&lol=:lol')
 		.as('Jordan');
 
-		Datasync
+		var tmp = Datasync
 		.addDatapath('http://www.test.com/some/simple/datapath/:param')
 		.as('Jordan')
 
@@ -28,11 +28,36 @@
 
 		})
 
-		.addSubset('name')(
-		function(){
+		.addSubset('name')
+			(function(){
+
+			})
+
+		.addTransform('someName')
+		(function(){
 
 		});
 
+
+		/*============================
+		=            TODO            =
+		============================*/
+		//syntax that allows extending pipeline results is desired:
+		// .addSubset('name')
+		// 	.toSubset('someOtherSubset')
+		// 	(function(){
+
+		// 	})
+		
+
+		// .addTransform('transformName')
+		// 	.toSubset('someSubset')
+		// 	(function(){
+
+		// 	})
+		/*=====  End of TODO  ======*/
+		
+		console.log(tmp);
 	</script>
 </body>
 </html>
