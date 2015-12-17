@@ -1,4 +1,4 @@
-(function(publicApi, is, datapathFactories, info, undefined){
+(function(publicApi, pipelineState, is, datapathFactories, info, undefined){
 
 	//add datapath single level
 	var _addDatapath = function(pathTemplate, pathKey){
@@ -12,14 +12,18 @@
 		}
 
 		//take action
-		// (new )
-		(new datapathFactories.Datapath(pathKey, pathTemplate));
+		var newDatapath = new datapathFactories.Datapath(pathKey, pathTemplate);
+		pipelineState.storeDatapath(pathKey, newDatapath);
+
+
+		return newDatapath;
+
 	};
 	//multi-level datapath adder
 	var _addDatapath_ML = function(pathTemplate){
 		return {
 			as:function(pathKey){
-				_addDatapath(pathTemplate, pathKey);
+				return _addDatapath(pathTemplate, pathKey);
 			}
 		}
 	};
@@ -41,11 +45,13 @@
 	};
 
 	publicApi.getDatapath = function(key){
-		
+		return pipelineState.getDatapath(key);
 	};
 
 })(
 	_public(), 
+	_private('state.pipeline'),
 	_private('util.is'),
 	_private('pipeline.datapath.factory'),
-	_private('info'));
+	_private('info')
+);

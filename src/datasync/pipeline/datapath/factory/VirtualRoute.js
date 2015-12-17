@@ -11,7 +11,6 @@
 
 		//init the component
 		generateRouteStructure(this, route);
-		console.log(this);
 	}
 
 	VirtualRoute.prototype.generateURL = function(paramMap){
@@ -33,10 +32,12 @@
 		//join the constructed path
 		return rRoute.join('');
 	}
+
 	/*----------  utilities  ----------*/
 	function formatDataForURL(datum){
 		return datum;
 	}
+
 	//params are now flat no distinction between query and route params
 	function generateRouteStructure(self, route){
 		var params = route.match(/:[\w\d]+/g),

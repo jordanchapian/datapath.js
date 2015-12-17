@@ -1,8 +1,8 @@
-(function(datapathFactories, info){
+(function(datapathFactories, fillerFactories, formatterFactories, is, info){
 
 	function Datapath(key, routeTemplate){
 
-		//create instance memory for pipeline input
+		//instance memory
 		this._pipeline = {
 			formatter:null,
 			filler:[],
@@ -12,7 +12,8 @@
 		};
 
 	}
-	
+
+	//TODO:remove this...
 	Datapath.prototype._ = {};
 
 	/*----------  Formatter Operations  ----------*/
@@ -25,7 +26,6 @@
 	};
 
 	Datapath.prototype.addFormatter = function(fn){
-		//1] defend the input
 
 		//Are there any arguments?
 		if(fn === undefined){
@@ -34,18 +34,18 @@
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
-		else if(Datasync._.util.is.Function(fn) === false){
+		else if(is.Function(fn) === false){
 			info.warn("Calling [Datapath].addFormatter an argument other than a function. No action was taken.");
 
 			return this;
 		}
 		//is the user attempting to overwrite a previously defined formatter on this datapath?
-		else if(this._pipeline.formatter !== null){
+		else if(this.hasFormatter()){
 			info.warn("Calling [Datapath].addFormatter caused Datasync to overwrite a formatter. Action was taken.");
 		}
 
-		//2] take the action
-		this._pipeline.formatter = (new Datasync.factory.Formatter(fn));
+		//take the action
+		this._pipeline.formatter = (new formatterFactories.Formatter(fn));
 
 		return this;
 	};
@@ -69,14 +69,14 @@
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
-		else if(internalApi.util.is.Function(fn) === false){
+		else if(is.Function(fn) === false){
 			info.warn("Calling [Datapath].addFiller an argument other than a function. No action was taken.");
 
 			return this;
 		}
 
 		//2] take the action
-		// this._pipeline.filler.push();
+		this._pipeline.filler.push((new fillerFactories.Filler(fn)));
 
 		return this;
 	};
@@ -164,5 +164,8 @@
 
 })(
 	_private('pipeline.datapath.factory'), 
+	_private('pipeline.filler.factory'), 
+	_private('pipeline.formatter.factory'), 
+	_private('util.is'),
 	_private('info')
 );

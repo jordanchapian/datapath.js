@@ -10,14 +10,22 @@
 
 	<script src='../build/datasync_global.js'></script>
 	<script>
-	
 		Datasync
 		.addDatapath('/api/path/to/:entity?me=true&test=:query&entity=:entity&lol=:lol')
 		.as('Jordan');
 
 		Datasync
 		.addDatapath('http://www.test.com/some/simple/datapath/:param')
-		.as('Jordan');
+		.as('Jordan')
+
+		.addFormatter(function(e){
+			console.log(e);
+		})
+		.addFiller(function(dataset){
+			console.log(dataset);
+			//return some array to be concat to dataset
+
+		});
 
 	</script>
 </body>
