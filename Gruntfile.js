@@ -24,7 +24,9 @@ module.exports = function(grunt) {
         src: [
           './src/env_intro.js',
           './src/datasync/**/*.js',
-          './src/env_outro_global.js'
+          './src/env_outro_global.js',
+
+          '!./src/datasync/**/*.spec.js'
         ],
         dest: 'build/datasync_global.js'
       },
@@ -32,7 +34,9 @@ module.exports = function(grunt) {
         src: [
           './src/env_intro.js',
           './src/datasync/**/*.js',
-          './src/env_outro_isolate.js'
+          './src/env_outro_isolate.js',
+
+          '!./src/datasync/**/*.spec.js'
         ],
         dest: 'build/datasync_isolate.js'
       },
@@ -40,7 +44,9 @@ module.exports = function(grunt) {
         src: [
           './src/env_intro.js',
           './src/datasync/**/*.js',
-          './src/env_outro_test.js'
+          './src/env_outro_test.js',
+
+          '!./src/datasync/**/*.spec.js'
         ],
         dest: 'build/datasync_test.js'
       }
