@@ -10,6 +10,15 @@ module.exports = function(grunt) {
         },
       },
     },
+    jasmine: {
+      all: {
+        src: 'build/datasync_test.js',
+        options: {
+          src: 'src/**/*.spec.js'
+        //   helpers: 'spec/*Helper.js'
+        }
+      }
+    },
     concat: {
       globalBuild: {
         src: [
@@ -26,6 +35,14 @@ module.exports = function(grunt) {
           './src/env_outro_isolate.js'
         ],
         dest: 'build/datasync_isolate.js'
+      },
+      testBuild:{
+        src: [
+          './src/env_intro.js',
+          './src/datasync/**/*.js',
+          './src/env_outro_test.js'
+        ],
+        dest: 'build/datasync_test.js'
       }
     }
   });
@@ -33,7 +50,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
 
   grunt.registerTask('default', ['concat']);
+  grunt.registerTask('test', ['concat', 'jasmine']);
   grunt.registerTask('dev', ['watch']);
 };
