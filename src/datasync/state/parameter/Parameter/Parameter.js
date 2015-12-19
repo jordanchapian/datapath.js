@@ -1,11 +1,14 @@
 (function(parameterFactory, is){
 
-	function Parameter(){
-
-		this._active;
-
+	function Parameter(initialValue){
+		this._active = (new parameterFactory.ParameterHistoryEntry(initialValue));
 		this._history = [];
 	}
+
+	Parameter.prototype.getValue = function(){
+		if(this._active === undefined) return undefined;
+		else return this._active.getValue();
+	};
 
 	Parameter.prototype.assignValue = function(value){
 		//if this is the value that is already active, let's just bail
@@ -19,7 +22,7 @@
 		this._active = undefined;
 
 		//determine if we have this value already in our history
-		var indexOfValue = value_indexInHistory(self, value);
+		var indexOfValue = value_indexInHistory(this, value);
 
 		//we have not seen this value before, let's create it
 		if(indexOfValue === -1){
@@ -30,6 +33,7 @@
 			this._active = this._history[indexOfValue];
 			this._history.splice(indexOfValue, 1);
 		}
+
 	};
 
 	//mark our active value as digested by some datapath
@@ -58,14 +62,17 @@
 
 	/*----------  utils  ----------*/
 	function value_indexInHistory(self, value){
+
 		for(var i = 0; i < self._history.length; i++){
 			if(self._history[i].getValue() === value){
 				return i;
 			}
 		}
 		return -1;
+
 	}
 
+	//expose globally
 	parameterFactory.Parameter = Parameter;
 
 })
