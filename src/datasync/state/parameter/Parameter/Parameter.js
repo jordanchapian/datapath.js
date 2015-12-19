@@ -34,10 +34,25 @@
 
 	//mark our active value as digested by some datapath
 	Parameter.prototype.markDigestedBy = function(datapathKey){
-		//determine if this datapath was digesting some past value in history, and remove
+		//if we do not have a value, we assign anything
+		if(this._active === undefined) return;
+
+		//determine if this datapath was digesting some past value in history, and remove if needed
+		for(var i = 0; i < this._history.length; i++){
+			if(this._history[i].isDigestedBy(datapathKey)){
+				//unmark this finding
+				this._history[i].unmarkDigestedBy(datapathKey);
+				//remove the finding if there are no longer any datapaths using it
+				if(this._history[i].isUnused()){
+					this._history.splice(i, 1);
+				}
+
+				break;
+			}
+		}
 
 		//mark the active value as digested by this datapath key
-		
+		this._active.markDigestedBy(datapathKey);
 	};
 
 	/*----------  utils  ----------*/
