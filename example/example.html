@@ -10,34 +10,32 @@
 
 	<script src='../build/datasync_global.js'></script>
 	<script>
-		Datasync
-		.addDatapath('/api/path/to/:entity?me=true&test=:query&entity=:entity&lol=:lol')
-		.as('Jordan');
+	console.log(
+			Datasync
+			.addDatapath('http://www.test.com/some/simple/datapath/:param')
+			.as('Jordan')
+			.setCacheSize(5)
 
-		var tmp = Datasync
-		.addDatapath('http://www.test.com/some/simple/datapath/:param')
-		.as('Jordan')
-
-		.addFormatter(function(e){
-			console.log(e);
-		})
-		
-		.addFiller(function(dataset){
-			console.log(dataset);
-			//return some array to be concat to dataset
-
-		})
-
-		.addSubset('name')
-			(function(){
+			.addFormatter(function(e){
+				console.log(e);
+			})
+			
+			.addFiller(function(dataset){
+				console.log(dataset);
+				//return some array to be concat to dataset
 
 			})
 
-		.addTransform('someName')
-		(function(){
+			.addSubset('name')
+				(function(){
 
-		});
+				})
 
+			.addTransform('someName')
+			(function(){
+
+			})
+	);
 
 		/*============================
 		=            TODO            =
@@ -56,8 +54,6 @@
 
 		// 	})
 		/*=====  End of TODO  ======*/
-		
-		console.log(tmp);
 	</script>
 </body>
 </html>

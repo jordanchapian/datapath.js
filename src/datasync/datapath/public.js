@@ -41,7 +41,6 @@
 		//they must want a multi-level accessor
 		else
 			return _addDatapath_ML(pathTemplate);
-
 	};
 
 	publicApi.getDatapath = function(key){

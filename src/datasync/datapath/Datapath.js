@@ -1,8 +1,10 @@
-(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, is, set, info){
+(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, config, is, set, info){
 
-	function Datapath(key, routeTemplate){
+	function Datapath(key, routeTemplate, configuration){
 
-		//instance memory
+		this._key = key;
+
+		//pipeline
 		this._pipeline = {
 			//unnamed pipeline steps
 			formatter:null,
@@ -13,7 +15,7 @@
 			transform:{}
 		};
 
-		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
+		this._route = (new datapathFactories.VirtualRoute(routeTemplate));
 	}
 
 	//TODO:remove this...
@@ -190,6 +192,15 @@
 		if(key === undefined) return set.values(this._pipeline.transform);
 		else return this._pipeline.transform[key];
 	};
+
+
+	/*----------  Configure hooks  ----------*/
+	Datapath.prototype.setCacheSize = function(size){
+		config.cacheSize.set(this._key, size);
+		
+		return this;
+	};
+
 	/*----------  utilities  ----------*/
 	
 	//alias this class in factories
@@ -203,6 +214,8 @@
 	_private('datapath.pipeline.subset.factory'),
 	_private('datapath.pipeline.transform.factory'),  
 	
+	_private('datapath.config'),
+
 	_private('util.is'),
 	_private('util.set'),
 	_private('info')
