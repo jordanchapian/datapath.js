@@ -1,0 +1,63 @@
+(function(cacheAPI, publicAPI, cacheFactories, datapath, is, set){
+		
+		var dataCaches = {};
+
+		publicAPI.ensureSynced = function(datapathKeys, cb){
+			if(arguments.length === 0) return;
+			else if(arguments.length > 1)datapathKeys = set.argsToArray(arguments);
+			else if(!is.Array(datapathKeys)) datapathKeys = [datapathKeys];
+
+			//narrow the requested keys to valid keys
+			datapathKeys = filterValidKeys(datapathKeys);
+
+			//ensure that caches exist for each of these keys
+			ensureCachesExist(datapathKeys);
+
+			//call sync for each of the caches
+			callSync(datapathKeys, cb);
+
+		};
+
+		publicAPI.syncAll = function(){
+
+		};
+
+
+		/*----------  utils  ----------*/
+
+		//ensure we have caches for some array of datapath keys
+		function ensureCachesExist(datapathKeys){
+			for(var i = 0; i < datapathKeys.length; i++){
+				if(dataCaches[i] === undefined){
+					dataCaches[datapathKeys[i]] = new cacheFactories.Cache(datapathKeys[i]);
+				}
+			}
+		}
+
+		//this function will analyze an array of keys, and return a set of valid keys
+		function filterValidKeys(datapathKeys){
+			return datapathKeys.filter(function(e){ return (datapath.getDatapath(e) !== undefined); });
+		}
+
+		//call syncs
+		function callSync(datapathKeys, cb){
+			var ajaxCallsRemaining = datapathKeys.length;
+			for(var i = 0; i < datapathKeys.length; i++){
+				dataCaches[datapathKeys[i]].sync(function(){
+					ajaxCallsRemaining--;
+
+					//if there are no outstanding requests, return the cb
+					if(ajaxCallsRemaining === 0){
+						if(is.Function(cb)) cb();
+					}
+				});
+			}
+		}
+})(
+	_private('cache'),
+	_public(),
+	_private('cache.factory'),
+	_private('datapath'),
+	_private('util.is'),
+	_private('util.set')
+);

@@ -11,4 +11,14 @@
 		return output;
 	};
 
+	set.argsToArray = function(argumentObject){
+		var outputArray = [];
+
+		for(var i = 0; i < argumentObject.length; i++){
+			outputArray.push(argumentObject[i]);
+		}
+
+		return outputArray;
+	};
+
 })(_private('util.set'));
