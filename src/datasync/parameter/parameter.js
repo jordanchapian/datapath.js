@@ -1,4 +1,4 @@
-(function(paramAPI, publicAPI, parameterFactories){
+(function(paramAPI, publicAPI){
 	
 	var parameterMap = {};
 
@@ -8,7 +8,7 @@
 	};
 
 	publicAPI.getParameter = paramAPI.getParameter = function(key){
-		parameterMap[key]
+		return parameterMap[key];
 	};
 
 })(

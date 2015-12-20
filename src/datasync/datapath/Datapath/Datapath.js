@@ -15,7 +15,7 @@
 			transform:{}
 		};
 
-		this._route = (new datapathFactories.VirtualRoute(routeTemplate));
+		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
 	}
 
 	//TODO:remove this...

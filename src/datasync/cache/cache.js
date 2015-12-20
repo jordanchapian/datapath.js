@@ -28,7 +28,7 @@
 		//ensure we have caches for some array of datapath keys
 		function ensureCachesExist(datapathKeys){
 			for(var i = 0; i < datapathKeys.length; i++){
-				if(dataCaches[i] === undefined){
+				if(dataCaches[datapathKeys[i]] === undefined){
 					dataCaches[datapathKeys[i]] = new cacheFactories.Cache(datapathKeys[i]);
 				}
 			}

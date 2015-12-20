@@ -1,5 +1,6 @@
 (function(info, logOptions, is, undefined){
 
+
 	info.warn = function(message){
 		if(!canSendLog(message))return;
 		//carry through with request, appending prefix to message
@@ -28,6 +29,6 @@
 
 })(
 	_private('info'),
-	_private('option.log'), 
+	_private('info.option'), 
 	_private('util.is')
 );

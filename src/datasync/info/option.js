@@ -3,4 +3,4 @@
 	logOption.logPrefix = 'Datasync::';
 	logOption.logEnabled = true;
 	
-})(_private('option.log'));
+})(_private('info.option'));

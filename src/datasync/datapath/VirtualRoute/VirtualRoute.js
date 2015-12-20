@@ -1,4 +1,4 @@
-(function(datapathFactories, info, is, undefined){
+(function(datapathFactories, info, is, set, undefined){
 
 	function VirtualRoute(route){
 		//internal memory
@@ -12,6 +12,9 @@
 		//init the component
 		generateRouteStructure(this, route);
 	}
+	VirtualRoute.prototype.getParameterKeys = function(){
+		return Object.keys(this._.paramIndex);
+	};
 
 	VirtualRoute.prototype.generateURL = function(paramMap){
 		//clone the route template
@@ -77,5 +80,6 @@
 })(
 	_private('datapath.factory'), 
 	_private('info'),
-	_private('util.is')
+	_private('util.is'),
+	_private('util.set')
 );
