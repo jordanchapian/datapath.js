@@ -1,6 +1,6 @@
 
 /**
- * Credit for this integrated ajax api goes to:
+ * Credit for this integrated aja.js api goes to:
  * Bertrand Chevrier <chevrier.bertrand@gmail.com>
  */
 
