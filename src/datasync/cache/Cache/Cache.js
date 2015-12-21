@@ -21,13 +21,13 @@
 	Cache.prototype.clearDataframes = function(){
 		this._dataframes = [];
 	};
-	
+
 	Cache.prototype.sync = function(cb){
 		var validIndex;
 
 		//if we have a valid frame already, we need to put it in the front of the array, and no datafetch required
 		if((validIndex = validFrameIndex(this)) > -1){
-			this._dataframes.splice(0, 0, this._dataframes.splice(validIndex, 1));
+			this._dataframes.splice(0, 0, this._dataframes.splice(validIndex, 1)[0]);
 		}
 		//we must add a new frame. (then check overflow)
 		else{
