@@ -1,6 +1,12 @@
 (function(cacheFactory, parameterAPI, is){
 	//the data frame is an association between a dataset and a parameter set
 	function DataFrame(datapath){
+		this._datapath = datapath;
+
+		//the datapath (needs to be injected with data)
+		this.data = new cacheFactory.Data(datapath);
+
+		//param map (what state is this data frame relative to)
 		this._param = {};
 		this._paramKeys = datapath.route.getParameterKeys();
 
@@ -10,6 +16,10 @@
 	DataFrame.prototype.fill = function(cb){
 		//if we need to fill, take the async action, if not, immediately respond
 
+		//get the data
+		//--- --- ---
+		//then inject into Data
+		this.data.inject(['this', 'is', 'the', 'dataset']);
 		cb();
 	};
 	//do the parameter values associated with this frame reflect the current param state

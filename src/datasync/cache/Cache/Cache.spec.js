@@ -51,6 +51,7 @@ describe('Cache class',function(){
 
 		//it should not be recreated, it should be reused and assigned to the 0 position
 		expect(cache._dataframes[0]).toBe(firstFrame);
+		expect(cache._dataframes[1]).toBe(secondFrame);
 	});
 
 	it('should handle dataframe overflows', function(){
