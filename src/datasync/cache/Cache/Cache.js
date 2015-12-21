@@ -8,6 +8,9 @@
 		this._datapath = datapathAPI.getDatapath(datapathKey);
 		this._datapathKey = datapathKey;
 	}
+	Cache.prototype.activeDataFrame = function(){
+		return (this._dataframes.length > 0) ? this._dataframes[0] : undefined;
+	};
 
 	Cache.prototype.isCacheFull = function(){
 		return (datapathConfig.cacheSize.get(this._datapathKey) === this._dataframes.length);

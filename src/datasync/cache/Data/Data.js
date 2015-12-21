@@ -10,23 +10,15 @@
 		init(this);
 	}
 
-	//replaces the data set with new raw data. It is then pushed through pipeline
-	Data.prototype.inject = function(rawData){
-		this._rawData = rawData;
-
-		runPipeline(this);
-	};
-
-
 	/*----------  utils  ----------*/
 	function runPipeline(self){
-		console.log('running pipeline on', self._rawData);
+		// console.log('running pipeline on', self._rawData);
 	}
 
 	function init(self){
 		if(self._rawData.length === 0)return;
 
-		runPipeline();
+		runPipeline(self);
 	}
 
 	cacheFactory.Data = Data;

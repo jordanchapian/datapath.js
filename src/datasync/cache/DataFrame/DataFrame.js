@@ -4,7 +4,7 @@
 		this._datapath = datapath;
 
 		//the datapath (needs to be injected with data)
-		this.data = new cacheFactory.Data(datapath);
+		this.data = new cacheFactory.Data(datapath, []);
 
 		//param map (what state is this data frame relative to)
 		this._param = {};
@@ -19,7 +19,8 @@
 		//get the data
 		//--- --- ---
 		//then inject into Data
-		this.data.inject(['this', 'is', 'the', 'dataset']);
+		this.data = new cacheFactory.Data(this._datapath, ['this', 'is', 'the', 'dataset']);
+
 		cb();
 	};
 	//do the parameter values associated with this frame reflect the current param state
