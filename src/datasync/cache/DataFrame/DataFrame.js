@@ -7,6 +7,11 @@
 		init(this);
 	}
 
+	DataFrame.prototype.fill = function(cb){
+		//if we need to fill, take the async action, if not, immediately respond
+
+		cb();
+	};
 	//do the parameter values associated with this frame reflect the current param state
 	DataFrame.prototype.parameterStateValid = function(){
 		//go through each of our parameter keys and ensure that each value associated

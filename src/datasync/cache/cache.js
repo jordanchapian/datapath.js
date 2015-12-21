@@ -22,6 +22,9 @@
 
 		};
 
+		cacheAPI.getCache = function(datapathKey){
+			return dataCaches[datapathKey];
+		};
 
 		/*----------  utils  ----------*/
 

@@ -10,29 +10,40 @@
 	}
 
 	Cache.prototype.isCacheFull = function(){
-		return (datapathConfig.cacheSize.get(this._datapathKey) >= this._dataframes.length);
+		return (datapathConfig.cacheSize.get(this._datapathKey) === this._dataframes.length);
 	};
 
+	Cache.prototype.cacheOverflow = function(){
+		return (datapathConfig.cacheSize.get(this._datapathKey) < this._dataframes.length);
+	};
+
+	//remove entire cache
+	Cache.prototype.clearDataframes = function(){
+		this._dataframes = [];
+	};
+	
 	Cache.prototype.sync = function(cb){
 		var validIndex;
 
-		//if we do not have any data frames, we push our first.
-		if(this._dataframes.length === 0){
-			this._dataframes.push( new cacheFactory.DataFrame(this._datapath) );
-		}
 		//if we have a valid frame already, we need to put it in the front of the array, and no datafetch required
-		else if((validIndex = validFrameIndex(this)) > -1){
-			console.log('we already have a valid frame');
+		if((validIndex = validFrameIndex(this)) > -1){
+			this._dataframes.splice(0, 0, this._dataframes.splice(validIndex, 1));
 		}
-		//we do not have a valid frame, we must add a new one to the front of the cache
-		//while checking if this violates our cache size
-		//we also must reach out for a new dataset
-		else {	
-			console.log('we need a new frame...');
+		//we must add a new frame. (then check overflow)
+		else{
+			this._dataframes.splice(0,0, new cacheFactory.DataFrame(this._datapath) );
 		}
 
-		//action is complete (TODO, this would be an async response...)
-		return cb();
+		//remove an old frame if we've overflowed
+		if(this.cacheOverflow()){
+			this._dataframes.splice((this._dataframes.length - 1), 1);
+		}
+
+		//now we can request our dataframe to fill it's dataset from remote
+		this._dataframes[0].fill(function(){
+			//action is complete (TODO, this would be an async response...)
+			return cb();
+		});
 	};
 
 	/*----------  utils  ----------*/

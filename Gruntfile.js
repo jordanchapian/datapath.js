@@ -14,7 +14,7 @@ module.exports = function(grunt) {
       all: {
         src: 'build/datasync_test.js',
         options: {
-          src: 'src/**/*.spec.js'
+          specs: 'src/**/*.spec.js'
         //   helpers: 'spec/*Helper.js'
         }
       }
