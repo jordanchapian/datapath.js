@@ -11,13 +11,18 @@
 	<script src='../build/datasync_global.js'></script>
 	<script>
 
-		// Datasync
-		// .addSchema({
-		// 	name:String,
-		// 	nHits:Number,
-		// 	date:Date
-		// })
-		// .as('schemaName');
+		Datasync
+		.addSchema({
+			name:String,
+			nHits:Number,
+			date:Date
+		})
+		.as('schemaName')
+		
+		// .addVirtual('name')
+		// (function(elem){
+
+		// });
 
 		Datasync
 		.addDatapath('http://www.test.com/some/simple/datapath/:param')
