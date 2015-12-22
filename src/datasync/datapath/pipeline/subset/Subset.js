@@ -1,10 +1,20 @@
 (function(subsetFactories, publicApi){
 	
-	function Subset(name, fn){
+	function Subset(key, fn){
 		//defend input
 
+		this.getKey = function(){
+			return key;
+		};
+
+		this.getFn = function(){
+			return fn;
+		};
 	}
 
+	Subset.prototype.run = function(data){
+		return [];
+	};
 
 	//alias this class in factories
 	subsetFactories.Subset = Subset;

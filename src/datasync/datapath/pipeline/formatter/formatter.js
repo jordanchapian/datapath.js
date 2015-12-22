@@ -5,6 +5,10 @@
 
 	}
 
+	Formatter.prototype.run = function(dataset){
+		
+	};
+	
 	//alias this class in factories
 	formatterFactories.Formatter = Formatter;
 

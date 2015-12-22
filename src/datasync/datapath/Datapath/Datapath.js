@@ -23,7 +23,7 @@
 
 	/*----------  Formatter Operations  ----------*/
 	Datapath.prototype.getFormatter = function(){
-		return this_pipeline.formatter;
+		return this._pipeline.formatter;
 	};
 
 	Datapath.prototype.hasFormatter = function(){
@@ -57,7 +57,7 @@
 
 	/*----------  Filler Operations  ----------*/
 	Datapath.prototype.getFiller = function(){
-		return this_pipeline.filler;
+		return this._pipeline.filler;
 	};
 	
 	Datapath.prototype.hasFiller = function(){
