@@ -33,7 +33,6 @@
 			var p0 = this._param[paramKey];
 			var p1 = parameterAPI.getParameter(paramKey);
 
-			console.log(p0,p1);
 			if(paramsEqual(p0, p1) === false) return false;
 		}
 

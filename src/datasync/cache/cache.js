@@ -21,7 +21,6 @@
 		//do not expose the data frame api to the public
 		//only return the data api attached to each frame
 		publicAPI.getData = function(datakey){
-			console.log(dataCaches[datakey]);
 			if(dataCaches[datakey] === undefined)return undefined; //maybe just a blank data object?
 			else if(dataCaches[datakey].activeDataFrame() == undefined) return undefined;
 			else return dataCaches[datakey].activeDataFrame().data;

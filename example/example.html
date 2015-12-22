@@ -15,25 +15,23 @@
 		.addDatapath('http://www.test.com/some/simple/datapath/:param')
 		.as('Jordan')
 		.setCacheSize(5)
-
+		//.setSchema({})
 		.addFormatter(function(e){
-			console.log(e);
+
 		})
 		
 		.addFiller(function(dataset){
-			console.log(dataset);
-			//return some array to be concat to dataset
-
+			
 		})
 
 		.addSubset('name')
-			(function(){
-
-			})
-
-		.addTransform('someName')
 		(function(){
 
+		})
+
+		.addTransform('someName')
+		(function(d){
+			return {test:'test', datasetSize:d.length};
 		});
 
 
@@ -48,7 +46,7 @@
 		Datasync.setParameter('param', 1);
 		Datasync.ensureSynced('Jordan');
 
-		console.log(Datasync.getData('Jordan').transform('someName'));
+		console.log(Datasync.getData('Jordan'));
 		/*============================
 		=            TODO            =
 		============================*/
