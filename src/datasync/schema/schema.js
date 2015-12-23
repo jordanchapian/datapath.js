@@ -1,4 +1,4 @@
-(function(publicApi, datapathAPI, is,set, schemaFactories, info, undefined){
+(function(publicApi, schemaAPI, is,set, schemaFactories, info, undefined){
 
 	var schemaMap = {};
 
@@ -52,7 +52,7 @@
 
 
 	//private exposure
-	datapathAPI.getSchema = function(key){
+	schemaAPI.getSchema = function(key){
 		if(key === undefined)return set.values(schemaMap);
 		else return schemaMap[key];
 	};	
@@ -60,7 +60,7 @@
 
 })(
 	_public(), 
-	_private('datapath'),
+	_private('schema'),
 	_private('util.is'),
 	_private('util.set'),
 	_private('schema.factory'),

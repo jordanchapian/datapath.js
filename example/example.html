@@ -18,11 +18,14 @@
 			date:Date
 		})
 		.as('schemaName')
-		
-		// .addVirtual('name')
-		// (function(elem){
 
-		// });
+		.addVirtual('name')
+		(function(elem){
+
+		});
+
+
+
 
 		Datasync
 		.addDatapath('http://www.test.com/some/simple/datapath/:param')
