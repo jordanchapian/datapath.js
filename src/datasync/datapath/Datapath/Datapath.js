@@ -7,6 +7,7 @@
 
 		//virtual route
 		this._.route = (new datapathFactories.VirtualRoute(routeTemplate || ''));
+		this._.schemaKey = null;
 
 		//pipeline memory
 		this._.pipeline = {
@@ -28,14 +29,20 @@
 		this._.route = (new datapathFactories.VirtualRoute(routeTemplate));
 
 		return this;
-	}
 
+	};
+
+	//just track the key... Do not worry about resolving it.
+	//if we resolved the key here, that would introduce ordering
+	//dependencies on the programmer digesting the api.
 	Datapath.prototype.useSchema = function(schemaKey){
 
 		if(is.String(schemaKey) === false){
 			info.warn('useSchema requires a string as an argument. Ignoring this request. Behavior is undefined.');
 			return this;
 		}
+
+		this._.schemaKey = schemaKey;
 
 		return this;
 	}
