@@ -13,9 +13,9 @@
 
 		Datasync
 		.addSchema({
-			name:String,
-			nHits:Number,
-			date:Date
+			name:{type: String, required:true},
+			nHits:{type: Number, required:true},
+			date:{type: Date, required:true}
 		})
 		.as('schemaName')
 

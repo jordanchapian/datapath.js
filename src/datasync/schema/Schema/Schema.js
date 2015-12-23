@@ -2,10 +2,18 @@
 	function Schema(config){
 		//private collections
 		this._ = {
-
+			propertyConfig:config
 		};
 	}
 
+	//basically wraps some raw datum... Cusing any required type conversions
+	//and adding virtual properties.
+	Schema.prototype.wrapDatum = function(datum){
+		console.log(datum);
+	};
+
+	/*----------  virtuals  ----------*/
+	
 	function addVirtual_sl(self, name, fn){
 		if(name === undefined || is.String(name) === false
 			|| fn === undefined || is.Function(fn) === false){
@@ -14,8 +22,6 @@
 		}
 
 		//take action
-
-		
 		return self;
 	}
 
