@@ -12,6 +12,11 @@
 		console.log(datum);
 	};
 
+	//determines if the datum is actually valid (are there required fields that are not filled?)
+	Schema.prototype.isValid = function(datum){
+		
+	};
+
 	/*----------  virtuals  ----------*/
 	
 	function addVirtual_sl(self, name, fn){

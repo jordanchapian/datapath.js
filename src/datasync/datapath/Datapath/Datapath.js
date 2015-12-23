@@ -15,12 +15,32 @@
 			transform:{}
 		};
 
-		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
+		this.route = (new datapathFactories.VirtualRoute(routeTemplate || ''));
 	}
 
-	//TODO:remove this...
-	Datapath.prototype._ = {};
+	Datapath.prototype.setRoute = function(routeTemplate){
 
+		if(is.String(routeTemplate) === false){
+			info.warn('setRoute requires a string as an argument. Ignoring this request. Behavior is undefined.');
+			return this;
+		}
+
+		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
+
+		return this;
+	}
+
+	Datapath.prototype.useSchema = function(schemaKey){
+
+		if(is.String(schemaKey) === false){
+			info.warn('useSchema requires a string as an argument. Ignoring this request. Behavior is undefined.');
+			return this;
+		}
+
+		// this.route = (new datapathFactories.VirtualRoute(routeTemplate));
+
+		return this;
+	}
 	/*----------  Formatter Operations  ----------*/
 	Datapath.prototype.getFormatter = function(){
 		return this._pipeline.formatter;

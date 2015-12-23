@@ -24,13 +24,12 @@
 
 		});
 
-
-
-
-		Datasync
-		.addDatapath('http://www.test.com/some/simple/datapath/:param')
-		.as('Jordan')
+		var JordanRoute = Datasync
+		.addDatapath('Jordan')
+		.setRoute('http://www.test.com/some/simple/datapath/:param')
+		.useSchema('schemaName')
 		.setCacheSize(5)
+
 		// .useSchema('schemaName')
 		.addFormatter(function(e){
 
@@ -38,7 +37,7 @@
 		
 		.addFiller(function(dataset){
 
-		})
+		})	
 
 		.addSubset('name')
 		(function(){

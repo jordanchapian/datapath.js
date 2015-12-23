@@ -1,15 +1,16 @@
 (function(publicApi, datapathAPI, is,set, datapathFactories, info, undefined){
 
 	var datapathMap = {};
-
-	//add datapath single level
-	var _addDatapath = function(pathTemplate, pathKey){
-
-		//defend input
-		if(pathTemplate === undefined || is.String(pathTemplate) === false
-				|| pathKey === undefined || is.String(pathKey) === false){
-
-			info.error('Input format for addDatapath is invalid. No recovery.');
+	
+	publicApi.addDatapath = function(pathKey, pathTemplate){
+		
+		//defend input (must have at least a path key to complete action)
+		if(pathKey === undefined || is.String(pathKey) === false){
+			info.error('addDatapath Requries that at least a path key is provided. No recovery.');
+			return;
+		}
+		else if(pathTemplate !== undefined && is.String(pathTemplate) === false){
+			info.error('addDatapath Requries that the provided pathTemplate is a string. No recovery.');
 			return;
 		}
 		//atempting to make multiple definitions with same key
@@ -17,34 +18,7 @@
 			info.warn('Provided multiple definitions for datapath key ['+pathKey+']. Behavior is not predictable.');
 		}
 
-		//take action
-		var newDatapath = new datapathFactories.Datapath(pathKey, pathTemplate);
-		datapathMap[pathKey] = newDatapath;
-
-		return newDatapath;
-	};
-	//multi-level datapath adder
-	var _addDatapath_ML = function(pathTemplate){
-		return {
-			as:function(pathKey){
-				return _addDatapath(pathTemplate, pathKey);
-			}
-		}
-	};
-
-	//public exposure
-	publicApi.addDatapath = function(pathTemplate, pathKey){
-		//do we have valid input?
-		if(pathTemplate === undefined){
-			info.warn("Calling addDatapath with no arguments. No action was taken.");
-			return this;
-		}
-		//are we using single level accessor?
-		else if(pathKey !== undefined)
-			return _addDatapath(pathTemplate, pathKey);
-		//they must want a multi-level accessor
-		else
-			return _addDatapath_ML(pathTemplate);
+		return (datapathMap[pathKey] = new datapathFactories.Datapath(pathKey, pathTemplate));
 	};
 
 	publicApi.getDatapath = function(key){
