@@ -2,20 +2,20 @@
 
 	function Datapath(key, routeTemplate, configuration){
 
-		this._key = key;
+		this._ = {};//protected instance namespace
+		this._.key = key;
 
-		//pipeline
-		this._pipeline = {
-			//unnamed pipeline steps
+		//virtual route
+		this._.route = (new datapathFactories.VirtualRoute(routeTemplate || ''));
+
+		//pipeline memory
+		this._.pipeline = {
 			formatter:null,
 			filler:[],
-
-			//named pipeline steps
 			subset:{},
 			transform:{}
 		};
 
-		this.route = (new datapathFactories.VirtualRoute(routeTemplate || ''));
 	}
 
 	Datapath.prototype.setRoute = function(routeTemplate){
@@ -25,7 +25,7 @@
 			return this;
 		}
 
-		this.route = (new datapathFactories.VirtualRoute(routeTemplate));
+		this._.route = (new datapathFactories.VirtualRoute(routeTemplate));
 
 		return this;
 	}
@@ -37,17 +37,15 @@
 			return this;
 		}
 
-		// this.route = (new datapathFactories.VirtualRoute(routeTemplate));
-
 		return this;
 	}
 	/*----------  Formatter Operations  ----------*/
 	Datapath.prototype.getFormatter = function(){
-		return this._pipeline.formatter;
+		return this._.pipeline.formatter;
 	};
 
 	Datapath.prototype.hasFormatter = function(){
-		return (this._pipeline.formatter !== null);
+		return (this._.pipeline.formatter !== null);
 	};
 
 	Datapath.prototype.addFormatter = function(fn){
@@ -70,18 +68,18 @@
 		}
 
 		//take the action
-		this._pipeline.formatter = (new formatterFactories.Formatter(fn));
+		this._.pipeline.formatter = (new formatterFactories.Formatter(fn));
 
 		return this;
 	};
 
 	/*----------  Filler Operations  ----------*/
 	Datapath.prototype.getFiller = function(){
-		return this._pipeline.filler;
+		return this._.pipeline.filler;
 	};
 	
 	Datapath.prototype.hasFiller = function(){
-		return (this._pipeline.filler.length !== 0);
+		return (this._.pipeline.filler.length !== 0);
 	};
 
 	Datapath.prototype.addFiller = function(fn){
@@ -99,7 +97,7 @@
 		}
 
 		//2] take the action
-		this._pipeline.filler.push((new fillerFactories.Filler(fn)));
+		this._.pipeline.filler.push((new fillerFactories.Filler(fn)));
 
 		return this;
 	};
@@ -127,20 +125,20 @@
 			return self;
 		}
 		//is this overwriting another subset? (non breaking)
-		else if(self._pipeline.subset[name] !== undefined){
+		else if(self._.pipeline.subset[name] !== undefined){
 			info.warn('Providing multiple definitions for subset ['+name+']. Took the action.');
 		}
 
 		//take action
-		self._pipeline.subset[name] = (new subsetFactories.Subset(name, fn));
+		self._.pipeline.subset[name] = (new subsetFactories.Subset(name, fn));
 
 		return self;
 	}
 
 	//add public facing interface
 	Datapath.prototype.getSubset = function(key){
-		if(key === undefined) return set.values(this._pipeline.subset);
-		else return this._pipeline.subset[key];
+		if(key === undefined) return set.values(this._.pipeline.subset);
+		else return this._.pipeline.subset[key];
 	};
 
 	Datapath.prototype.addSubset = function(subsetName, fn){
@@ -181,12 +179,12 @@
 			return self;
 		}
 		//is this overwriting another transform? (non breaking)
-		else if(self._pipeline.transform[name] !== undefined){
+		else if(self._.pipeline.transform[name] !== undefined){
 			info.warn('Providing multiple definitions for transform ['+name+']. Took the action.');
 		}
 
 		//take action
-		self._pipeline.transform[name] = (new transformFactories.Transform(name, fn));
+		self._.pipeline.transform[name] = (new transformFactories.Transform(name, fn));
 
 		return self;
 	}
@@ -209,14 +207,14 @@
 	};
 
 	Datapath.prototype.getTransform = function(key){
-		if(key === undefined) return set.values(this._pipeline.transform);
-		else return this._pipeline.transform[key];
+		if(key === undefined) return set.values(this._.pipeline.transform);
+		else return this._.pipeline.transform[key];
 	};
 
 
 	/*----------  Configure hooks  ----------*/
 	Datapath.prototype.setCacheSize = function(size){
-		config.cacheSize.set(this._key, size);
+		config.cacheSize.set(this._.key, size);
 		
 		return this;
 	};

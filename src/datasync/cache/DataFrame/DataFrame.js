@@ -8,7 +8,7 @@
 
 		//param map (what state is this data frame relative to)
 		this._param = {};
-		this._paramKeys = datapath.route.getParameterKeys();
+		this._paramKeys = datapath._.route.getParameterKeys();
 
 		init(this);
 	}
