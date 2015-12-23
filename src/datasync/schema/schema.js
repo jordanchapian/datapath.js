@@ -2,47 +2,22 @@
 
 	var schemaMap = {};
 
-	//add datapath single level
-	var _addSchema = function(schemaDefinition, schemaKey){
-		console.log(schemaDefinition, schemaKey);
-		//defend input
-		if(schemaDefinition === undefined || is.Object(schemaDefinition) === false
-				|| schemaKey === undefined || is.String(schemaKey) === false){
-
-			info.error('Input format for addSchema is invalid. No recovery.');
+	//public exposure
+	publicApi.addSchema = function(schemaKey, schemaDefinition){
+		//defend input (must have at least a path key to complete action)
+		if(schemaKey === undefined || is.String(schemaKey) === false){
+			info.error('addSchema Requries that at least a schemaKey[String] is provided. No recovery.');
 			return;
 		}
-		//atempting to make multiple definitions with same key
+		else if(schemaDefinition !== undefined && is.Object(schemaDefinition) === false){
+			info.error('addSchema Requries that the provided schemaDefinition is an object. No recovery.');
+			return;
+		}
 		else if(schemaMap[schemaKey] !== undefined){
-			info.warn('Provided multiple definitions for schema key ['+schemaKey+']. Behavior is not predictable.');
+			info.warn('Provided multiple definitions for schama key ['+schemaKey+']. Behavior is not predictable.');
 		}
 
-		//take action
-		return (schemaMap[schemaKey] = new schemaFactories.Schema(schemaDefinition));
-	};
-
-	//multi-level datapath adder
-	var _addSchema_ML = function(schemaDefinition){
-		return {
-			as:function(schemaKey){
-				return _addSchema(schemaDefinition, schemaKey);
-			}
-		}
-	};
-
-	//public exposure
-	publicApi.addSchema = function(schemaDefinition, schemaKey){
-		//do we have valid input?
-		if(schemaDefinition === undefined){
-			info.warn("Calling addSchema with no arguments. No action was taken.");
-			return this;
-		}
-		//are we using single level accessor?
-		else if(schemaKey !== undefined)
-			return _addSchema(schemaDefinition, schemaKey);
-		//they must want a multi-level accessor
-		else
-			return _addSchema_ML(schemaDefinition);
+		return (schemaMap[schemaKey] = new schemaFactories.Schema(schemaKey, schemaDefinition));
 	};
 
 	publicApi.getSchema = function(key){

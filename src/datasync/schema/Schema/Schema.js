@@ -1,10 +1,26 @@
 (function(schemaFactory, info, is){
-	function Schema(config){
+	function Schema(key, config){
 		//private collections
 		this._ = {
-			propertyConfig:config
+			key:key,
+			templateDefinition:(config || null),
+			virtual:{}
 		};
 	}
+
+	Schema.prototype.setTemplate = function(templateDefinition){
+		if(is.Object(templateDefinition) === false){
+			info.warn('Template definition must be an object. Definition not assigned.');
+			return this;
+		}
+		else if(this._.templateDefinition !== null){
+			info.warn('Overwriting template definition for ['+this._.key+'] multiple times. Behavior may difficult to predict.');	
+		}
+		
+		this._.templateDefinition = templateDefinition;
+		
+		return this;
+	};
 
 	//basically wraps some raw datum... Cusing any required type conversions
 	//and adding virtual properties.
@@ -25,8 +41,13 @@
 			info.warn('Invalid input provided to addVirtual. No action taken.');
 			return self;
 		}
+		else if(self._.virtual[name] !== undefined){
+			info.warn('Multiple definitions for virtual property ['+name+'] in schema ['+self._.key+']');
+		}
 
 		//take action
+		self._.virtual[name] = fn;
+
 		return self;
 	}
 

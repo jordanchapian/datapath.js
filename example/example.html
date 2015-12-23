@@ -11,25 +11,36 @@
 	<script src='../build/datasync_global.js'></script>
 	<script>
 
+
+		var d = Datasync
+		.addSchema('Jordan')
+			.setTemplate({
+				name:{type: String, required:true},
+				nHits:{type: Number, required:true},
+				date:{type: Date, required:true}
+			})
+			.addVirtual('name')
+			(function(instanceOb){
+
+			});
+		//TODO: rehash this api format...
+		// Datasync
+		// .addSchema({
+		
+		// })
+		// .as('schemaName')
+
+		// .addVirtual('name')
+		// (function(elem){
+
+		// });
+
 		Datasync
-		.addSchema({
-			name:{type: String, required:true},
-			nHits:{type: Number, required:true},
-			date:{type: Date, required:true}
-		})
-		.as('schemaName')
+		.addDatapath('Jordan')
+			.setRoute('http://www.test.com/some/simple/datapath/:param')
+			.useSchema('schemaName')
+			.setCacheSize(5)
 
-		.addVirtual('name')
-		(function(elem){
-
-		});
-
-		var JordanRoute = Datasync.addDatapath('Jordan')
-		.setRoute('http://www.test.com/some/simple/datapath/:param')
-		.useSchema('schemaName')
-		.setCacheSize(5)
-
-		// .useSchema('schemaName')
 		.addFormatter(function(e){
 
 		})
@@ -49,18 +60,18 @@
 		});
 
 
-		Datasync.setParameter('param', 1);
-		Datasync.ensureSynced('Jordan');
+		// Datasync.setParameter('param', 1);
+		// Datasync.ensureSynced('Jordan');
 
-		//this will create another new frame (2)
-		Datasync.setParameter('param', 2);
-		Datasync.ensureSynced('Jordan');
+		// //this will create another new frame (2)
+		// Datasync.setParameter('param', 2);
+		// Datasync.ensureSynced('Jordan');
 
-		//now, the make the first frame valid again
-		Datasync.setParameter('param', 1);
-		Datasync.ensureSynced('Jordan');
+		// //now, the make the first frame valid again
+		// Datasync.setParameter('param', 1);
+		// Datasync.ensureSynced('Jordan');
 
-		console.log(Datasync.getData('Jordan'));
+		// console.log(Datasync.getData('Jordan'));
 		/*============================
 		=            TODO            =
 		============================*/
