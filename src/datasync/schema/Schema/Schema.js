@@ -2,23 +2,36 @@
 	function Schema(key, config){
 		//private collections
 		this._ = {
+			//the key assigned to this schema
 			key:key,
-			templateDefinition:(config || null),
+
+			//a store of the provided configuration
+			templateDefinition:null,
+			template:null,
+
+			//map of virtual properties
 			virtual:{}
 		};
+
+
+		//init from config
+		if(config !== undefined)
+			this.setTemplate(config);
 	}
 
 	Schema.prototype.setTemplate = function(templateDefinition){
-		if(is.Object(templateDefinition) === false){
-			info.warn('Template definition must be an object. Definition not assigned.');
+		if(is.Object(templateDefinition) === false && is.Array(templateDefinition) === false){
+			info.warn('Template definition base must be an object or an array. Definition not assigned.');
 			return this;
 		}
 		else if(this._.templateDefinition !== null){
 			info.warn('Overwriting template definition for ['+this._.key+'] multiple times. Behavior may difficult to predict.');	
 		}
 		
+		//initialize references to this new template definition
 		this._.templateDefinition = templateDefinition;
-		
+		this._.template = (new schemaFactory.SchemaTemplate(templateDefinition));
+
 		return this;
 	};
 
