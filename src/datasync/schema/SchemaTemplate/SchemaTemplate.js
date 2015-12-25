@@ -1,7 +1,6 @@
 (function(schemaFactories, is){
 
-	function SchemaTemplate(config, accessor){
-		console.log('created schema template with configuration', config);
+	function SchemaTemplate(config){
 
 		this._ = {
 			config:config,
@@ -9,6 +8,7 @@
 		};
 
 		init(this);
+
 	}
 
 	/*----------  class methods  ----------*/
@@ -22,7 +22,7 @@
 	function init(self){
 		//initialize the root of the schema configuration
 		//(this is a recursive operation)
-		self._.root = schemaFactories.SchemaTemplateNode(self._.config);
+		self._.root = schemaFactories.SchemaTemplateNode(self._.config, '');
 
 
 	}
