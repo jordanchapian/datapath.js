@@ -1,4 +1,4 @@
-(function(schemaFactories, is){
+(function(schemaFactories, typeCode, is){
 	function SchemaTemplateNode(configuration, accessor){
 		
 		this._ = {
@@ -27,17 +27,36 @@
 
 	//determine if the object is a primitive configuration object (rather than just a type declaration)
 	function assignTypeCode(self){
-		//
+
 		if(isPrimitiveConfig(self))
-			return (self._.typeCode = 0);
-		else if(isPrimitive())
-			return (self._.typeCode = 1);
+			return (self._.typeCode = typeCode.primitiveConfig);
+		else if(isPrimitive(self))
+			return (self._.typeCode = typeCode.primitive);
 		else if(isCollection(self))
-			return (self._.typeCode = 2);
+			return (self._.typeCode = typeCode.collection);
 		else if(isSchema(self))
-			return (self._.typeCode = 3);
+			return (self._.typeCode = typeCode.schema);
+
 	}
-		
+	
+	function assignChildren(self){
+		// if(self.)
+
+		//if we are a primitive, we do not need to assign children 
+		//this is our termination statement for recursive behavior
+		if(self._.typeCode === typeCode.primitive || self._.typeCode === typeCode.primitiveConfig){
+
+		}
+		//we just create a single child, and that is the iterative relationship
+		else if(self._.typeCode === typeCode.collection){
+
+		}
+		//a schema is to need to create child nodes for each of it's first level properties
+		else if(self._.typeCode === typeCode.schema){
+
+		}
+	}
+
 	//some type object like String, Boolean
 	function isPrimitive(self){
 		var config = self._.config;
@@ -46,7 +65,7 @@
 
 	//some configuration object for a primitive like {_type:Boolean, default:true}
 	function isPrimitiveConfig(self){
-		return (is.Object(self._.config) && ob._type !== undefined);
+		return (is.Object(self._.config) && self._.config._type !== undefined);
 	}
 	
 	function isCollection(self){
@@ -63,5 +82,6 @@
 
 })(
 	_private('schema.factory'),
+	_private('schema.constant.typeCode'),
 	_private('util.is')
 );
