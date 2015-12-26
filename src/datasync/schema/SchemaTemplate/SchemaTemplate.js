@@ -12,7 +12,9 @@
 	}
 
 	/*----------  class methods  ----------*/
-	
+	SchemaTemplate.prototype.applyTo = function(dataset){
+		this._.root.applyTo(dataset);
+	};	
 	/*----------  static methods  ----------*/
 	SchemaTemplate.isValidConfiguration = function(){
 
@@ -22,9 +24,7 @@
 	function init(self){
 		//initialize the root of the schema configuration
 		//(this is a recursive operation)
-		self._.root = schemaFactories.SchemaTemplateNode(self._.config, '');
-
-
+		self._.root = new schemaFactories.SchemaTemplateNode(self._.config);
 	}
 
 	//expose to namespace

@@ -1,82 +1,75 @@
 (function(schemaFactories, typeCode, is){
-	function SchemaTemplateNode(configuration, accessor){
+	function SchemaTemplateNode(configuration, accessKey){
 		
 		this._ = {
 			value:null,
 			typeCode:null,//const
 			config:configuration,
-			accessor:accessor,
 
+			accessKey:accessKey || '',
 			children:[]
 		};
 
 		//run init
 		init(this);
 	}
-
 	/*----------  class methods  ----------*/
-	
+	SchemaTemplateNode.prototype.isPrimitive = function(){
+		return ((self._.typeCode === typeCode.primitive));
+	};
+
+	SchemaTemplateNode.prototype.isCollection = function(){
+		return (self._.typeCode === typeCode.collection);
+	};
+
+	SchemaTemplateNode.prototype.isSchema = function(){
+		return (self._.typeCode === typeCode.schema);
+	};
+
 	/*----------  static methods  ----------*/
-		
+	SchemaTemplateNode.isPrimitive = function(config){
+		//handle configuration object and basic function cases
+		return ((is.Function(config) && (config === String || config === Boolean || config === Date || config === Number))
+					 || (is.Object(config) && config._type !== undefined));
+	};
+
+	SchemaTemplateNode.isCollection = function(config){
+		return (is.Array(config));
+	};
+
+	SchemaTemplateNode.isSchema = function(config){
+		return (is.Object(config) && config._type === undefined);
+	};
+
 	/*----------  utils  ----------*/
 	function init(self){
 		assignTypeCode(self);
-
-
+		assignChildren(self);
 	}
 
 	//determine if the object is a primitive configuration object (rather than just a type declaration)
 	function assignTypeCode(self){
-
-		if(isPrimitiveConfig(self))
-			return (self._.typeCode = typeCode.primitiveConfig);
-		else if(isPrimitive(self))
+		var config = self._.config;
+		if(SchemaTemplateNode.isPrimitive(config))
 			return (self._.typeCode = typeCode.primitive);
-		else if(isCollection(self))
+		else if(SchemaTemplateNode.isCollection(config))
 			return (self._.typeCode = typeCode.collection);
-		else if(isSchema(self))
+		else if(SchemaTemplateNode.isSchema(config))
 			return (self._.typeCode = typeCode.schema);
-
 	}
-	
+
 	function assignChildren(self){
-		// if(self.)
-
-		//if we are a primitive, we do not need to assign children 
-		//this is our termination statement for recursive behavior
-		if(self._.typeCode === typeCode.primitive || self._.typeCode === typeCode.primitiveConfig){
-
-		}
 		//we just create a single child, and that is the iterative relationship
-		else if(self._.typeCode === typeCode.collection){
-
+		if(self._.typeCode === typeCode.collection){
+			self._.children.push( new SchemaTemplateNode(self._.config[0]) );
 		}
 		//a schema is to need to create child nodes for each of it's first level properties
 		else if(self._.typeCode === typeCode.schema){
-
+			for(var key in self._.config){
+				self._.children.push( new SchemaTemplateNode(self._.config[key], key) );
+			}
 		}
 	}
-
-	//some type object like String, Boolean
-	function isPrimitive(self){
-		var config = self._.config;
-		return (is.Function(config) && (config === String || config === Boolean || config === Date || config === Number));
-	}
-
-	//some configuration object for a primitive like {_type:Boolean, default:true}
-	function isPrimitiveConfig(self){
-		return (is.Object(self._.config) && self._.config._type !== undefined);
-	}
-	
-	function isCollection(self){
-		return (is.Array(self._.config));
-	}
-
-	function isSchema(self){
-		return (is.Object(self._.config) && isPrimitiveConfig(self) === false);
-	}
-
-
 
 	schemaFactories.SchemaTemplateNode = SchemaTemplateNode;
 

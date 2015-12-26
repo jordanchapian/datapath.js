@@ -35,16 +35,12 @@
 		return this;
 	};
 
-	//basically wraps some raw datum... Cusing any required type conversions
-	//and adding virtual properties.
-	Schema.prototype.wrapDatum = function(datum){
-		console.log(datum);
+	
+	Schema.prototype.applyTo = function(data){
+		console.log(this._)
+		this._.template.applyTo(data);
 	};
 
-	//determines if the datum is actually valid (are there required fields that are not filled?)
-	Schema.prototype.isValid = function(datum){
-		
-	};
 
 	/*----------  virtuals  ----------*/
 	

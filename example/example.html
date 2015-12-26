@@ -15,11 +15,11 @@
 		var d = Datasync
 		.addSchema('Jordan')
 			.setTemplate([{
-				name:{type: String, required:true},
-				nHits:{type: Number, required:true},
-				date:{type: Date, required:true}
+				name:{_type: String, required:true},
+				nHits:{_type: Number, required:true},
+				date:{_type: Date, required:true}
 			}])
-			
+
 			.addVirtual('name')
 			(function(instanceOb){
 
