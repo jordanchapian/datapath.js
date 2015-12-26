@@ -24,7 +24,8 @@
 	function init(self){
 		//initialize the root of the schema configuration
 		//(this is a recursive operation)
-		self._.root = new schemaFactories.SchemaTemplateNode(self._.config);
+		var rootContructor = schemaFactories.SchemaTemplateNode.provideSubclass(self._.config);
+		self._.root = new rootContructor(self._.config);
 	}
 
 	//expose to namespace

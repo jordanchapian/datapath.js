@@ -23,6 +23,8 @@ module.exports = function(grunt) {
       globalBuild: {
         src: [
           './src/env_intro.js',
+          //temporary order dependency TODO:Module loader
+          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
           './src/datasync/**/*.js',
           './src/env_outro_global.js',
 
@@ -33,6 +35,8 @@ module.exports = function(grunt) {
       isolateBuild:{
         src: [
           './src/env_intro.js',
+          //temporary order dependency TODO:Module loader
+          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
           './src/datasync/**/*.js',
           './src/env_outro_isolate.js',
 
@@ -43,6 +47,8 @@ module.exports = function(grunt) {
       testBuild:{
         src: [
           './src/env_intro.js',
+          //temporary order dependency TODO:Module loader
+          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
           './src/datasync/**/*.js',
           './src/env_outro_test.js',
 

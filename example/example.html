@@ -17,7 +17,11 @@
 			.setTemplate([{
 				name:{_type: String, required:true},
 				nHits:{_type: Number, required:true},
-				date:{_type: Date, required:true}
+				date:{_type: Date, required:true},
+
+				days:[],
+
+				daysUnder:[String]
 			}])
 
 			.addVirtual('name')
