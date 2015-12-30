@@ -1,7 +1,7 @@
-define('cache/data/DataFrame',
+define('path/cache/data/DataFrame',
 [
 	'util/is',
-	'cache/data/Data',
+	'./Data',
 	'parameter/collection'
 ],
 function(is, Data, parameterCollection){

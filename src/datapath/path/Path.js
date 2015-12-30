@@ -4,27 +4,26 @@ define('path/Path',
 	'util/set',
 	'info',
 
-	'path/VirtualRoute',
+	'./VirtualRoute',
 
-	'path/pipeline/Filler',
-	'path/pipeline/Formatter',
-	'path/pipeline/Subset',
-	'path/pipeline/Transform',
+	'./pipeline/Filler',
+	'./pipeline/Formatter',
+	'./pipeline/Subset',
+	'./pipeline/Transform',
 
-	'option/cacheDefault'
+	'./cache/Cache'
 ],
-function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cacheDefault){
+function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cache){
 
 	function Path(key, routeTemplate, configuration){
 
 		this._ = {};//protected instance namespace
+
+		//accessor key
 		this._.key = key;
 
 		//virtual route
 		this._.route = (new VirtualRoute(routeTemplate || ''));
-
-		//cache size for this path (start with default)
-		this._.cacheSize = cacheDefault.cacheSize;
 
 		//pipeline memory
 		this._.pipeline = {
@@ -34,8 +33,13 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 			transform:{}
 		};
 
+		this._.cache = new Cache(this);
 	}
 
+	/*=============================
+	=            Route            =
+	=============================*/
+	
 	Path.prototype.setRoute = function(routeTemplate){
 
 		if(is.String(routeTemplate) === false){
@@ -48,8 +52,51 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 		return this;
 
 	};
+	
+	/*=====  End of Route  ======*/
+	
+	
+	/*=============================
+	=            Cache            =
+	=============================*/
+	Path.prototype.setCacheSize = function(size){
+		//defend input
+		if(size === undefined || is.Number(size) === false || size < 1){
+			infoLog.error("Not providing a {number >= 1} size for [setCacheSize]. Action Ignored.");
+			return;
+		}
 
-	/*----------  Formatter Operations  ----------*/
+		//change the configuration
+		this._.cache.setSize(size);
+
+		//return prototype api
+		return this;
+	};
+
+	/*=====  End of Cache  ======*/
+	
+
+
+	/*============================
+	=            Data            =
+	============================*/
+
+	Path.prototype.getData = function(){
+		return this._.cache.getData(this._.key);
+	};
+
+	Path.prototype.sync = function(cb){
+		return this._.cache.sync(this._.key);
+	};
+
+	/*=====  End of Data  ======*/
+	
+
+
+	/*=================================
+	=            Formatter            =
+	=================================*/
+	
 	Path.prototype.getFormatter = function(){
 		return this._.pipeline.formatter;
 	};
@@ -82,8 +129,15 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 
 		return this;
 	};
+	
+	/*=====  End of Formatter  ======*/
 
-	/*----------  Filler Operations  ----------*/
+
+
+	/*==============================
+	=            Filler            =
+	==============================*/
+	
 	Path.prototype.getFiller = function(){
 		return this._.pipeline.filler;
 	};
@@ -111,12 +165,15 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 
 		return this;
 	};
-
-
-	/*----------  Subset Operations  ----------*/
 	
-	//multi level add API
+	/*=====  End of Filler  ======*/
+	
 
+
+
+	/*==============================
+	=            Subset            =
+	==============================*/
 	function addSubset_ml(self, name){
 		return function(fn){
 			return addSubset(self, name, fn);
@@ -166,9 +223,16 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 			return addSubset_ml(this, subsetName);
 
 	};
+	
+	
+	/*=====  End of Subset  ======*/
+	
 
-	/*----------  Transform Operation  ----------*/
 
+	/*=================================
+	=            Transform            =
+	=================================*/
+	
 	function addTransform_ml(self, name){
 		return function(fn){
 			return addTransform(self, name, fn);
@@ -220,36 +284,10 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 		if(key === undefined) return set.values(this._.pipeline.transform);
 		else return this._.pipeline.transform[key];
 	};
-
-
-	/*----------  Configure hooks  ----------*/
-	Path.prototype.setCacheSize = function(size, omitEvents){
-		//defend input
-		if(size === undefined || is.Number(size) === false || size < 1){
-			infoLog.error("Not providing a {number >= 1} size for [setCacheSize]. Action Ignored.");
-			return;
-		}
-
-		//we have changed the local cache size configuration, 
-		//we can emit this event internally, then externally.
-		if(!omitEvents && this._.cacheSize !== size)
-		{
-
-		}
-
-		//change the configuration
-		this._.cacheSize = size;
-
-		//return prototype api
-		return this;
-	};
-
-	Path.prototype.getCacheSize = function(){
-		return this._.cacheSize;
-	};
-
-	/*----------  utilities  ----------*/
 	
-	//alias this class in factories
+	/*=====  End of Transform  ======*/
+	
+	
+	
 	return Path;
 });

@@ -1,32 +1,47 @@
-define('cache/Cache',
+define('path/cache/Cache',
 [
-	'path/collection',
-	'cache/data/DataFrame'
+	'option/cacheDefault',
+	'./data/DataFrame',
+	'util/is'
 ],
-function(pathCollection, DataFrame){
+function(cacheDefault, DataFrame, is){
 
-	function Cache(datapathKey){
+	function Cache(datapath){
 		//private instance namespace
 		this._ = {};
 
 		//dataframes, ordered from recent to oldest
 		this._.dataframes = [];
-		
+		this._.capacity = cacheDefault.cacheSize;
+
 		//reference to the datapath object associated with this cache
-		this._.datapath = datapathAPI.get(datapathKey);
-		this._.datapathKey = datapathKey;
+		this._.datapath = datapath;
 	}
+
+	Cache.prototype.setSize = function(size){
+		if(is.Number(size) && size >= 1){
+			this._.capacity = size;
+
+			//we have changed the local cache size configuration, 
+			//we can emit this event internally, then externally.
+			// if(!omitEvents && this._.cacheSize !== size)
+			// {
+
+			// }
+
+		}
+	};
 
 	Cache.prototype.activeDataFrame = function(){
 		return (this._.dataframes.length > 0) ? this._.dataframes[0] : undefined;
 	};
 
 	Cache.prototype.isCacheFull = function(){
-		return (this._.datapath.getCacheSize() === this._.dataframes.length);
+		return (this._.capacity === this._.dataframes.length);
 	};
 
 	Cache.prototype.cacheOverflow = function(){
-		return (this._.datapath.getCacheSize() < this._.dataframes.length);
+		return (this._.capacity < this._.dataframes.length);
 	};
 
 	//remove entire cache
@@ -34,7 +49,7 @@ function(pathCollection, DataFrame){
 		this._.dataframes = [];
 	};
 
-	Cache.prototype.sync = function(cb){
+	Cache.prototype.sync = function(cb){ //should return promise
 		var validIndex;
 
 		//if we have a valid frame already, we need to put it in the front of the array, and no datafetch required

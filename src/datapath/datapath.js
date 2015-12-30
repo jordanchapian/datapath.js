@@ -2,10 +2,9 @@ define('datapath',
 [
 	'parameter/collection',
 	'path/collection',
-	'cache/collection',
 	'util/is'
 ],
-function(parameterCollection, pathCollection, cacheCollection, is){
+function(parameterCollection, pathCollection, is){
 
 	function DatapathPublicApi(pathname){
 		var requestedPaths = pathCollection.get(pathname);

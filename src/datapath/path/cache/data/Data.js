@@ -1,4 +1,4 @@
-define('cache/data/Data',
+define('path/cache/data/Data',
 [
 ],
 function(){
