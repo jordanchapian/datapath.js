@@ -1,14 +1,24 @@
-(function(cacheFactory, parameterAPI, is){
+define('cache/data/DataFrame',
+[
+	'util/is',
+	'cache/data/Data'
+],
+function(is, Data){
+
 	//the data frame is an association between a dataset and a parameter set
 	function DataFrame(datapath){
-		this._datapath = datapath;
+		//private namespace
+		this._ = {};
+
+		//datapath
+		this._.datapath = datapath;
 
 		//the datapath (needs to be injected with data)
-		this.data = new cacheFactory.Data(datapath, []);
+		this._.data = new Data(datapath, []);
 
 		//param map (what state is this data frame relative to)
-		this._param = {};
-		this._paramKeys = datapath._.route.getParameterKeys();
+		this._.param = {};
+		this._.paramKeys = datapath._.route.getParameterKeys();
 
 		init(this);
 	}
@@ -19,18 +29,18 @@
 		//get the data
 		//--- --- ---
 		//then inject into Data
-		this.data = new cacheFactory.Data(this._datapath, ['this', 'is', 'the', 'dataset']);
+		this._.data = new Data(this._.datapath, ['this', 'is', 'the', 'dataset']);
 
 		cb();
 	};
 	//do the parameter values associated with this frame reflect the current param state
-	DataFrame.prototype.parameterStateValid = function(){
+	DataFrame.prototype.parametersValid = function(){
 		//go through each of our parameter keys and ensure that each value associated
 		//with this frame is consistent to the current set parameters
-		for(var i = 0; i < this._paramKeys.length; i++){
-			var paramKey = this._paramKeys[i];
+		for(var i = 0; i < this._.paramKeys.length; i++){
+			var paramKey = this._.paramKeys[i];
 
-			var p0 = this._param[paramKey];
+			var p0 = this._.param[paramKey];
 			var p1 = parameterAPI.getParameter(paramKey);
 
 			if(paramsEqual(p0, p1) === false) return false;
@@ -41,8 +51,8 @@
 
 	function init(self){
 		//grab the most recent param state. That is what this frame will anchor to.
-		self._paramKeys.forEach(function(paramKey){
-			self._param[paramKey] = parameterAPI.getParameter(paramKey);
+		self._.paramKeys.forEach(function(paramKey){
+			self._.param[paramKey] = parameterAPI.getParameter(paramKey);
 		});
 	}
 	
@@ -64,10 +74,6 @@
 		else return false;
 	}
 
-	cacheFactory.DataFrame = DataFrame;
-	
-})(
-	_private('cache.factory'),
-	_private('state.parameter'),
-	_private('util.is')
-);
+	return DataFrame;
+
+});

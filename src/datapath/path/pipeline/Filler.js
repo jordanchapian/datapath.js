@@ -1,4 +1,4 @@
-define('datapath/pipeline/Filler',
+define('path/pipeline/Filler',
 [
 ],
 function(){

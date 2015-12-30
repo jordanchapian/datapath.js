@@ -1,11 +1,12 @@
 define('datapath',
 [
-	'parameter/collection'
+	'parameter/collection',
+	'path/collection'
 ],
 function(parameterCollection){
 
 	function DatapathPublicApi(pathname){
-
+		
 	}
 
 	/*----------  static extensions  ----------*/

@@ -1,4 +1,4 @@
-define('datapath/VirtualRoute',
+define('path/VirtualRoute',
 [
 	'util/is',
 	'util/set',

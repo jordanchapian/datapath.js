@@ -1,4 +1,4 @@
-define('datapath/pipeline/Formatter',
+define('path/pipeline/Formatter',
 [
 ],
 function(){

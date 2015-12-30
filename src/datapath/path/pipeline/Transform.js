@@ -1,4 +1,4 @@
-define('datapath/pipeline/Transform',
+define('path/pipeline/Transform',
 [
 
 ],

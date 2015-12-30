@@ -1,25 +1,30 @@
-define('datapath/Datapath',
+define('path/Path',
 [
 	'util/is',
 	'util/set',
 	'info',
 
-	'datapath/VirtualRoute',
+	'path/VirtualRoute',
 
-	'datapath/pipeline/Filler',
-	'datapath/pipeline/Formatter',
-	'datapath/pipeline/Subset',
-	'datapath/pipeline/Transform'
+	'path/pipeline/Filler',
+	'path/pipeline/Formatter',
+	'path/pipeline/Subset',
+	'path/pipeline/Transform',
+
+	'option/cacheDefault'
 ],
-function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
+function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cacheDefault){
 
-	function Datapath(key, routeTemplate, configuration){
+	function Path(key, routeTemplate, configuration){
 
 		this._ = {};//protected instance namespace
 		this._.key = key;
 
 		//virtual route
 		this._.route = (new VirtualRoute(routeTemplate || ''));
+
+		//cache size for this path (start with default)
+		this._.cacheSize = cacheDefault.cacheSize;
 
 		//pipeline memory
 		this._.pipeline = {
@@ -31,7 +36,7 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 
 	}
 
-	Datapath.prototype.setRoute = function(routeTemplate){
+	Path.prototype.setRoute = function(routeTemplate){
 
 		if(is.String(routeTemplate) === false){
 			info.warn('setRoute requires a string as an argument. Ignoring this request. Behavior is undefined.');
@@ -45,31 +50,31 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 	};
 
 	/*----------  Formatter Operations  ----------*/
-	Datapath.prototype.getFormatter = function(){
+	Path.prototype.getFormatter = function(){
 		return this._.pipeline.formatter;
 	};
 
-	Datapath.prototype.hasFormatter = function(){
+	Path.prototype.hasFormatter = function(){
 		return (this._.pipeline.formatter !== null);
 	};
 
-	Datapath.prototype.addFormatter = function(fn){
+	Path.prototype.addFormatter = function(fn){
 
 		//Are there any arguments?
 		if(fn === undefined){
-			info.warn("Calling [Datapath].addFormatter with no arguments. No action was taken.");
+			info.warn("Calling [Path].addFormatter with no arguments. No action was taken.");
 
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
 		else if(is.Function(fn) === false){
-			info.warn("Calling [Datapath].addFormatter an argument other than a function. No action was taken.");
+			info.warn("Calling [Path].addFormatter an argument other than a function. No action was taken.");
 
 			return this;
 		}
 		//is the user attempting to overwrite a previously defined formatter on this datapath?
 		else if(this.hasFormatter()){
-			info.warn("Calling [Datapath].addFormatter caused Datasync to overwrite a formatter. Action was taken.");
+			info.warn("Calling [Path].addFormatter caused Datasync to overwrite a formatter. Action was taken.");
 		}
 
 		//take the action
@@ -79,24 +84,24 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 	};
 
 	/*----------  Filler Operations  ----------*/
-	Datapath.prototype.getFiller = function(){
+	Path.prototype.getFiller = function(){
 		return this._.pipeline.filler;
 	};
 	
-	Datapath.prototype.hasFiller = function(){
+	Path.prototype.hasFiller = function(){
 		return (this._.pipeline.filler.length !== 0);
 	};
 
-	Datapath.prototype.addFiller = function(fn){
+	Path.prototype.addFiller = function(fn){
 		//Are there any arguments?
 		if(fn === undefined){
-			info.warn("Calling [Datapath].addFiller with no arguments. No action was taken.");
+			info.warn("Calling [Path].addFiller with no arguments. No action was taken.");
 
 			return this;
 		}
 		//has the user provided a function as an argument to this function?
 		else if(is.Function(fn) === false){
-			info.warn("Calling [Datapath].addFiller an argument other than a function. No action was taken.");
+			info.warn("Calling [Path].addFiller an argument other than a function. No action was taken.");
 
 			return this;
 		}
@@ -141,16 +146,16 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 	}
 
 	//add public facing interface
-	Datapath.prototype.getSubset = function(key){
+	Path.prototype.getSubset = function(key){
 		if(key === undefined) return set.values(this._.pipeline.subset);
 		else return this._.pipeline.subset[key];
 	};
 
-	Datapath.prototype.addSubset = function(subsetName, fn){
+	Path.prototype.addSubset = function(subsetName, fn){
 
 		//do we have valid input?
 		if(subsetName === undefined){
-			info.warn("Calling [Datapath].addSubset with no arguments. No action was taken.");
+			info.warn("Calling [Path].addSubset with no arguments. No action was taken.");
 			return this;
 		}
 		//are we using single level accessor?
@@ -195,11 +200,11 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 	}
 
 	//add public facing interface
-	Datapath.prototype.addTransform = function(name, fn){
+	Path.prototype.addTransform = function(name, fn){
 
 		//do we have valid input?
 		if(name === undefined){
-			info.warn("Calling [Datapath].addTransform with no arguments. No action was taken.");
+			info.warn("Calling [Path].addTransform with no arguments. No action was taken.");
 			return this;
 		}
 		//are we using single level accessor?
@@ -211,21 +216,39 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 
 	};
 
-	Datapath.prototype.getTransform = function(key){
+	Path.prototype.getTransform = function(key){
 		if(key === undefined) return set.values(this._.pipeline.transform);
 		else return this._.pipeline.transform[key];
 	};
 
 
 	/*----------  Configure hooks  ----------*/
-	Datapath.prototype.setCacheSize = function(size){
-		config.cacheSize.set(this._.key, size);
-		
-		return this;
+	Path.prototype.setCacheSize = function(size, omitEvents){
+		//defend input
+		if(size === undefined || is.Number(size) === false || size < 1){
+			infoLog.error("Not providing a {number >= 1} size for [setCacheSize]. Action Ignored.");
+			return;
+		}
+
+		//we have changed the local cache size configuration, 
+		//we can emit this event internally, then externally.
+		if(!omitEvents && cacheSize[datapath] !== size)
+		{
+
+		}
+
+		//change the configuration
+		this._.cacheSize = size;
+	};
+
+	Path.prototype.getCacheSize = function(){
+
+		return this._.cacheSize;
+
 	};
 
 	/*----------  utilities  ----------*/
 	
 	//alias this class in factories
-	return Datapath;
+	return Path;
 });

@@ -1,4 +1,4 @@
-define('datapath/pipeline/Subset',
+define('path/pipeline/Subset',
 [
 ],
 function(){

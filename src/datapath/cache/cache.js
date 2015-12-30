@@ -1,76 +1,75 @@
-(function(cacheAPI, publicAPI, cacheFactories, datapath, is, set){
+define('cache/Cache',
+[
+	'path/collection',
+	'cache/data/DataFrame'
+],
+function(pathCollection, DataFrame){
+
+	function Cache(datapathKey){
+		//private instance namespace
+		this._ = {};
+
+		//dataframes, ordered from recent to oldest
+		this._.dataframes = [];
 		
-		var dataCaches = {};
+		//reference to the datapath object associated with this cache
+		this._.datapath = datapathAPI.get(datapathKey);
+		this._.datapathKey = datapathKey;
+	}
 
-		publicAPI.ensureSynced = function(datapathKeys, cb){
-			if(arguments.length === 0) return;
-			else if(arguments.length > 1)datapathKeys = set.argsToArray(arguments);
-			else if(!is.Array(datapathKeys)) datapathKeys = [datapathKeys];
+	Cache.prototype.activeDataFrame = function(){
+		return (this._.dataframes.length > 0) ? this._.dataframes[0] : undefined;
+	};
 
-			//narrow the requested keys to valid keys
-			datapathKeys = filterValidKeys(datapathKeys);
+	Cache.prototype.isCacheFull = function(){
+		return (this._.datapath.getCacheSize() === this._.dataframes.length);
+	};
 
-			//ensure that caches exist for each of these keys
-			ensureCachesExist(datapathKeys);
+	Cache.prototype.cacheOverflow = function(){
+		return (this._.datapath.getCacheSize() < this._.dataframes.length);
+	};
 
-			//call sync for each of the caches
-			callSync(datapathKeys, cb);
+	//remove entire cache
+	Cache.prototype.clearDataframes = function(){
+		this._.dataframes = [];
+	};
 
-		};
+	Cache.prototype.sync = function(cb){
+		var validIndex;
 
-		//do not expose the data frame api to the public
-		//only return the data api attached to each frame
-		publicAPI.getData = function(datakey){
-			if(dataCaches[datakey] === undefined)return undefined; //maybe just a blank data object?
-			else if(dataCaches[datakey].activeDataFrame() == undefined) return undefined;
-			else return dataCaches[datakey].activeDataFrame().data;
-		};
-
-		publicAPI.syncAll = function(){
-
-		};
-
-		cacheAPI.getCache = function(datapathKey){
-			return dataCaches[datapathKey];
-		};
-
-		/*----------  utils  ----------*/
-
-		//ensure we have caches for some array of datapath keys
-		function ensureCachesExist(datapathKeys){
-			for(var i = 0; i < datapathKeys.length; i++){
-				if(dataCaches[datapathKeys[i]] === undefined){
-					dataCaches[datapathKeys[i]] = new cacheFactories.Cache(datapathKeys[i]);
-				}
-			}
+		//if we have a valid frame already, we need to put it in the front of the array, and no datafetch required
+		if((validIndex = validFrameIndex(this)) > -1){
+			this._.dataframes.splice(0, 0, this._.dataframes.splice(validIndex, 1)[0]);
+		}
+		//we must add a new frame. (then check overflow)
+		else{
+			this._.dataframes.splice(0,0, new DataFrame(this._.datapath) );
 		}
 
-		//this function will analyze an array of keys, and return a set of valid keys
-		function filterValidKeys(datapathKeys){
-			return datapathKeys.filter(function(e){ return (datapath.getDatapath(e) !== undefined); });
+		//remove an old frame if we've overflowed
+		if(this.cacheOverflow()){
+			this._.dataframes.splice((this._.dataframes.length - 1), 1);
 		}
 
-		//call syncs
-		function callSync(datapathKeys, cb){
-			var ajaxCallsRemaining = datapathKeys.length;
-			for(var i = 0; i < datapathKeys.length; i++){
-				dataCaches[datapathKeys[i]].sync(function(){
-					ajaxCallsRemaining--;
+		//now we can request our dataframe to fill it's dataset from remote
+		this._.dataframes[0].fill(function(){
+			//action is complete (TODO, this would be an async response...)
+			return cb();
+		});
+	};
 
-					//if there are no outstanding requests, return the cb
-					if(ajaxCallsRemaining === 0){
-						if(is.Function(cb)) cb();
-					}
-				});
-			}
+	/*----------  utils  ----------*/
+	function validFrameIndex(self){
+
+		for(var i=0; i < self._.dataframes.length; i++){
+			if(self._.dataframes[i].parametersValid()) return i;
 		}
 
-		
-})(
-	_private('cache'),
-	_public(),
-	_private('cache.factory'),
-	_private('datapath'),
-	_private('util.is'),
-	_private('util.set')
-);
+		return -1;
+	}
+
+
+	/*----------  Expose  ----------*/
+	
+	return Cache;
+});
