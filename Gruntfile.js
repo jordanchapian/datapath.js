@@ -1,70 +1,46 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    watch: {
-      scripts: {
-        files: ['src/**/*.js'],
-        tasks: ['concat'],
-        options: {
-          spawn: false,
-        },
-      },
-    },
-    jasmine: {
-      all: {
-        src: 'build/datasync_test.js',
-        options: {
-          specs: 'src/**/*.spec.js'
-        //   helpers: 'spec/*Helper.js'
+    
+    jasmine : {
+      functional:{
+        src : './src/datasync/**/*.js',
+        options : {
+            outfile:'./test/functionalTests.html',
+            keepRunner:true,
+            specs : './test/functional/**/*.spec.js',
+            template: require('grunt-template-jasmine-requirejs'),
+            templateOptions: {
+                requireConfig: {
+                    baseUrl: '../'
+                }
+            }
         }
       }
     },
-    concat: {
-      globalBuild: {
-        src: [
-          './src/env_intro.js',
-          //temporary order dependency TODO:Module loader
-          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
-          './src/datasync/**/*.js',
-          './src/env_outro_global.js',
 
-          '!./src/datasync/**/*.spec.js'
-        ],
-        dest: 'build/datasync_global.js'
-      },
-      isolateBuild:{
-        src: [
-          './src/env_intro.js',
-          //temporary order dependency TODO:Module loader
-          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
-          './src/datasync/**/*.js',
-          './src/env_outro_isolate.js',
-
-          '!./src/datasync/**/*.spec.js'
-        ],
-        dest: 'build/datasync_isolate.js'
-      },
-      testBuild:{
-        src: [
-          './src/env_intro.js',
-          //temporary order dependency TODO:Module loader
-          './src/datasync/schema/SchemaTemplate/SchemaTemplateNode/SchemaTemplateNode.js',
-          './src/datasync/**/*.js',
-          './src/env_outro_test.js',
-
-          '!./src/datasync/**/*.spec.js'
-        ],
-        dest: 'build/datasync_test.js'
+    requirejs: {
+      compile: {
+        options: {
+          optimize: "none",
+          almond: true,
+          out: "./build/datasync.js",
+          name: "../../node_modules/almond/almond",
+          baseUrl: "./src/datasync",
+          include:['datasync'],
+          wrap: {
+              startFile: "src/start.frag",
+              endFile: "src/end.frag"
+          }
+        }
       }
     }
+
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
-  grunt.registerTask('default', ['concat']);
-  grunt.registerTask('test', ['concat', 'jasmine']);
-  grunt.registerTask('dev', ['watch']);
+  grunt.registerTask('default', ['requirejs']);
+  grunt.registerTask('test', ['jasmine']);
 };

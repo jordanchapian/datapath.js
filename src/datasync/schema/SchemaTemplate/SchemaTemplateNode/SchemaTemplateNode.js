@@ -15,15 +15,15 @@
 	}
 	/*----------  class methods  ----------*/
 	SchemaTemplateNode.prototype.isPrimitive = function(){
-		return ((self._.typeCode === typeCode.primitive));
+		return this instanceof schemaFactories.STN_Primitive;
 	};
 
 	SchemaTemplateNode.prototype.isCollection = function(){
-		return (self._.typeCode === typeCode.collection);
+		return this instanceof schemaFactories.STN_Collection;
 	};
 
 	SchemaTemplateNode.prototype.isSchema = function(){
-		return (self._.typeCode === typeCode.schema);
+		return this instanceof schemaFactories.STN_Schema;
 	};
 
 	/*----------  static methods  ----------*/
@@ -51,32 +51,22 @@
 
 	/*----------  utils  ----------*/
 	function init(self){
-		assignTypeCode(self);
 		assignChildren(self);
 	}
 
-	//determine if the object is a primitive configuration object (rather than just a type declaration)
-	function assignTypeCode(self){
-		var config = self._.config;
-		if(SchemaTemplateNode.isPrimitive(config))
-			return (self._.typeCode = typeCode.primitive);
-		else if(SchemaTemplateNode.isCollection(config))
-			return (self._.typeCode = typeCode.collection);
-		else if(SchemaTemplateNode.isSchema(config))
-			return (self._.typeCode = typeCode.schema);
-	}
-
 	function assignChildren(self){
+		var config = self._.config;
+		
 		//we just create a single child, and that is the iterative relationship
-		if(self._.typeCode === typeCode.collection && self._.config.length > 0){
-			var childConstructor = SchemaTemplateNode.provideSubclass(self._.config[0]);
-			self._.children.push( new childConstructor(self._.config[0]) );
+		if(SchemaTemplateNode.isCollection(config) && config.length > 0){
+			var childConstructor = SchemaTemplateNode.provideSubclass(config[0]);
+			self._.children.push( new childConstructor(config[0]) );
 		}
 		//a schema is to need to create child nodes for each of it's first level properties
-		else if(self._.typeCode === typeCode.schema){
-			for(var key in self._.config){
-				var childConstructor = SchemaTemplateNode.provideSubclass(self._.config[key]);
-				self._.children.push( new childConstructor(self._.config[key]) );
+		else if(SchemaTemplateNode.isSchema(config)){
+			for(var key in config){
+				var childConstructor = SchemaTemplateNode.provideSubclass(config[key]);
+				self._.children.push( new childConstructor(config[key], key) );
 			}
 		}
 	}
