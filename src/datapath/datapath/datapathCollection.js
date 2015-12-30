@@ -1,8 +1,16 @@
-(function(publicApi, datapathAPI, is,set, datapathFactories, info, undefined){
-
+define('datapath/datapathCollection',
+[
+	'util/is',
+	'util/set',
+	'info',
+	'./Datapath'
+],
+function(is, set, info, Datapath){
 	var datapathMap = {};
-	
-	publicApi.addDatapath = function(pathKey, pathTemplate){
+		
+	var api = {};
+
+	api.addDatapath = function(pathKey, pathTemplate){
 		
 		//defend input (must have at least a path key to complete action)
 		if(pathKey === undefined || is.String(pathKey) === false){
@@ -18,27 +26,14 @@
 			info.warn('Provided multiple definitions for datapath key ['+pathKey+']. Behavior is not predictable.');
 		}
 
-		return (datapathMap[pathKey] = new datapathFactories.Datapath(pathKey, pathTemplate));
+		return (datapathMap[pathKey] = new Datapath(pathKey, pathTemplate));
 	};
 
-	publicApi.getDatapath = function(key){
+	api.getDatapath = function(key){
 		if(key === undefined)return set.values(datapathMap);
 		else return datapathMap[key];
 	};
 
+	return api;
 
-	//private exposure
-	datapathAPI.getDatapath = function(key){
-		if(key === undefined)return set.values(datapathMap);
-		else return datapathMap[key];
-	};	
-
-
-})(
-	_public(), 
-	_private('datapath'),
-	_private('util.is'),
-	_private('util.set'),
-	_private('datapath.factory'),
-	_private('info')
-);
+});

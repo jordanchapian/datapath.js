@@ -12,11 +12,11 @@
             exports = module.exports = factory();
         }
 
-        exports.datasync = factory();
+        exports.datapath = factory();
     }
     else{
         //Browser globals case. Just assign the 
         //result to a property on the global. 
-        root.datasync = factory();
+        root.datapath = factory();
     }
 }(this, function () {

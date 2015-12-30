@@ -1,4 +1,17 @@
-(function(datapathFactories, fillerFactories, formatterFactories, subsetFactories, transformFactories, config, is, set, info){
+define('datapath/Datapath',
+[
+	'util/is',
+	'util/set',
+	'info',
+
+	'datapath/VirtualRoute',
+
+	'datapath/pipeline/Filler',
+	'datapath/pipeline/Formatter',
+	'datapath/pipeline/Subset',
+	'datapath/pipeline/Transform'
+],
+function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform){
 
 	function Datapath(key, routeTemplate, configuration){
 
@@ -6,7 +19,7 @@
 		this._.key = key;
 
 		//virtual route
-		this._.route = (new datapathFactories.VirtualRoute(routeTemplate || ''));
+		this._.route = (new VirtualRoute(routeTemplate || ''));
 
 		//pipeline memory
 		this._.pipeline = {
@@ -25,7 +38,7 @@
 			return this;
 		}
 
-		this._.route = (new datapathFactories.VirtualRoute(routeTemplate));
+		this._.route = (new VirtualRoute(routeTemplate));
 
 		return this;
 
@@ -60,7 +73,7 @@
 		}
 
 		//take the action
-		this._.pipeline.formatter = (new formatterFactories.Formatter(fn));
+		this._.pipeline.formatter = (new Formatter(fn));
 
 		return this;
 	};
@@ -89,7 +102,7 @@
 		}
 
 		//2] take the action
-		this._.pipeline.filler.push((new fillerFactories.Filler(fn)));
+		this._.pipeline.filler.push((new Filler(fn)));
 
 		return this;
 	};
@@ -122,7 +135,7 @@
 		}
 
 		//take action
-		self._.pipeline.subset[name] = (new subsetFactories.Subset(name, fn));
+		self._.pipeline.subset[name] = (new Subset(name, fn));
 
 		return self;
 	}
@@ -176,7 +189,7 @@
 		}
 
 		//take action
-		self._.pipeline.transform[name] = (new transformFactories.Transform(name, fn));
+		self._.pipeline.transform[name] = (new Transform(name, fn));
 
 		return self;
 	}
@@ -214,19 +227,5 @@
 	/*----------  utilities  ----------*/
 	
 	//alias this class in factories
-	datapathFactories.Datapath = Datapath;
-
-})(
-	_private('datapath.factory'), 
-
-	_private('datapath.pipeline.filler.factory'), 
-	_private('datapath.pipeline.formatter.factory'),
-	_private('datapath.pipeline.subset.factory'),
-	_private('datapath.pipeline.transform.factory'),  
-	
-	_private('datapath.config'),
-
-	_private('util.is'),
-	_private('util.set'),
-	_private('info')
-);
+	return Datapath;
+});

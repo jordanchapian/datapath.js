@@ -1,5 +1,7 @@
-(function(formatterFactories, internalApi, publicApi){
-	
+define('datapath/pipeline/Formatter',
+[
+],
+function(){
 	//formatter just passes entities
 	function Formatter(fn){
 		//defend input
@@ -10,14 +12,16 @@
 	}
 
 	Formatter.prototype.run = function(dataset){
+		
 		var formatter = this.getFn();
 
 		dataset.forEach(function(datum){
 			formatter(datum);
 		});
+
 	};
 
 	//alias this class in factories
-	formatterFactories.Formatter = Formatter;
+	return Formatter;
 
-})(_private('datapath.pipeline.formatter.factory'), _private(), _public());
+});

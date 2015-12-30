@@ -1,6 +1,8 @@
-(function(subsetFactories, publicApi){
-	//the subset currently passes each item into a predicate (fn)
-	//it then returns a filtered array
+define('datapath/pipeline/Subset',
+[
+],
+function(){
+
 	function Subset(key, fn){
 		//defend input
 
@@ -18,9 +20,6 @@
 	};
 
 	//alias this class in factories
-	subsetFactories.Subset = Subset;
+	return Subset;
 
-})(
-	_private('datapath.pipeline.subset.factory'), 
-	_public()
-);
+});

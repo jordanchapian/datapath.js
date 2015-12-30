@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     
     jasmine : {
       functional:{
-        src : './src/datasync/**/*.js',
+        src : './src/datapath/**/*.js',
         options : {
             outfile:'./test/functionalTests.html',
             keepRunner:true,
@@ -24,10 +24,10 @@ module.exports = function(grunt) {
         options: {
           optimize: "none",
           almond: true,
-          out: "./build/datasync.js",
+          out: "./build/datapath.js",
           name: "../../node_modules/almond/almond",
-          baseUrl: "./src/datasync",
-          include:['datasync'],
+          baseUrl: "./src/datapath",
+          include:['datapath'],
           wrap: {
               startFile: "src/start.frag",
               endFile: "src/end.frag"

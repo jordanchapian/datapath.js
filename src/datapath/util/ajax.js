@@ -3,10 +3,8 @@
  * Credit for this integrated aja.js api goes to:
  * Bertrand Chevrier <chevrier.bertrand@gmail.com>
  */
-
-(function(utilAPI){
-    'use strict';
-
+define('ajax', [], function(){
+    
     /**
      * supported request types.
      * TODO support new types : 'style', 'file'?
@@ -858,7 +856,5 @@
     };
 
     //append to the util API
-    utilAPI.aja = aja;
-}(
-    _private('util')
-));
+    return aja;
+});

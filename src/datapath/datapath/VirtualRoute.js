@@ -1,5 +1,11 @@
-(function(datapathFactories, info, is, set, undefined){
-
+define('datapath/VirtualRoute',
+[
+	'util/is',
+	'util/set',
+	'info'
+],
+function(is, set, info){
+	
 	function VirtualRoute(route){
 		//internal memory
 		this._ = {
@@ -75,11 +81,7 @@
 	
 
 	//alias this class in factories
-	datapathFactories.VirtualRoute = VirtualRoute;
+	return VirtualRoute;
 
-})(
-	_private('datapath.factory'), 
-	_private('info'),
-	_private('util.is'),
-	_private('util.set')
-);
+});
+
