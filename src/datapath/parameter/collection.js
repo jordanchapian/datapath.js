@@ -8,11 +8,11 @@ function(datapath){
 
 	var api = {};
 
-	api.setParameter = function(key, value){
+	api.set = function(key, value){
 		parameterMap[key] = value;
 	};
 
-	api.getParameter = paramAPI.getParameter = function(key){
+	api.get = function(key){
 		return parameterMap[key];
 	};
 

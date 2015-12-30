@@ -1,9 +1,10 @@
 define('cache/data/DataFrame',
 [
 	'util/is',
-	'cache/data/Data'
+	'cache/data/Data',
+	'parameter/collection'
 ],
-function(is, Data){
+function(is, Data, parameterCollection){
 
 	//the data frame is an association between a dataset and a parameter set
 	function DataFrame(datapath){
@@ -41,7 +42,7 @@ function(is, Data){
 			var paramKey = this._.paramKeys[i];
 
 			var p0 = this._.param[paramKey];
-			var p1 = parameterAPI.getParameter(paramKey);
+			var p1 = parameterCollection.get(paramKey);
 
 			if(paramsEqual(p0, p1) === false) return false;
 		}
@@ -52,7 +53,7 @@ function(is, Data){
 	function init(self){
 		//grab the most recent param state. That is what this frame will anchor to.
 		self._.paramKeys.forEach(function(paramKey){
-			self._.param[paramKey] = parameterAPI.getParameter(paramKey);
+			self._.param[paramKey] = parameterCollection.get(paramKey);
 		});
 	}
 	

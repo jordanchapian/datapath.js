@@ -34,13 +34,12 @@ function(set, is, pathCollection, Cache){
 		else return dataCaches[datakey].activeDataFrame().data;
 	};
 
-	api.syncAll = function(){
-
-	};
-
 	api.getCache = function(datapathKey){
 		return dataCaches[datapathKey];
 	};
+
+
+	return api;
 
 	/*----------  utils  ----------*/
 

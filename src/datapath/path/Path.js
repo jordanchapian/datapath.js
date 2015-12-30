@@ -232,19 +232,20 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, cach
 
 		//we have changed the local cache size configuration, 
 		//we can emit this event internally, then externally.
-		if(!omitEvents && cacheSize[datapath] !== size)
+		if(!omitEvents && this._.cacheSize !== size)
 		{
 
 		}
 
 		//change the configuration
 		this._.cacheSize = size;
+
+		//return prototype api
+		return this;
 	};
 
 	Path.prototype.getCacheSize = function(){
-
 		return this._.cacheSize;
-
 	};
 
 	/*----------  utilities  ----------*/
