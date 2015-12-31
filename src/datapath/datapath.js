@@ -5,7 +5,6 @@ define('datapath',
 	'util/is'
 ],
 function(parameterCollection, pathCollection, is){
-
 	function DatapathPublicApi(pathname){
 		var requestedPaths = pathCollection.get(pathname);
 

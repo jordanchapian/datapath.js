@@ -34,6 +34,11 @@ function(is, Data, parameterCollection){
 
 		cb();
 	};
+
+	DataFrame.prototype.getData = function(){
+		return this._.data;
+	};
+	
 	//do the parameter values associated with this frame reflect the current param state
 	DataFrame.prototype.parametersValid = function(){
 		//go through each of our parameter keys and ensure that each value associated

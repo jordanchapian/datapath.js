@@ -76,7 +76,7 @@ function(){
 
 		//in place formatting
 		function applyFormatter(Datapath, data){
-			if(Datapath.getFormatter() === undefined) return;
+			if(Datapath.getFormatter() === null) return;
 
 			Datapath.getFormatter().run(data);
 		}

@@ -11,9 +11,10 @@ define('path/Path',
 	'./pipeline/Subset',
 	'./pipeline/Transform',
 
-	'./cache/Cache'
+	'./cache/Cache',
+	'util/Promise'
 ],
-function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cache){
+function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cache, Promise){
 
 	function Path(key, routeTemplate, configuration){
 
@@ -74,7 +75,6 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cach
 	};
 
 	/*=====  End of Cache  ======*/
-	
 
 
 	/*============================
@@ -82,7 +82,7 @@ function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cach
 	============================*/
 
 	Path.prototype.getData = function(){
-		return this._.cache.getData(this._.key);
+		return this._.cache.activeDataFrame().getData();
 	};
 
 	Path.prototype.sync = function(cb){

@@ -11,7 +11,7 @@ function(cacheDefault, DataFrame, is){
 		this._ = {};
 
 		//dataframes, ordered from recent to oldest
-		this._.dataframes = [];
+		this._.dataframes = [new DataFrame(datapath)];
 		this._.capacity = cacheDefault.cacheSize;
 
 		//reference to the datapath object associated with this cache
