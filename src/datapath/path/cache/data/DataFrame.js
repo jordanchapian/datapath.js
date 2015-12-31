@@ -1,10 +1,12 @@
 define('path/cache/data/DataFrame',
 [
 	'util/is',
+	'util/Promise',
+
 	'./Data',
 	'parameter/collection'
 ],
-function(is, Data, parameterCollection){
+function(is, Promise, Data, parameterCollection){
 
 	//the data frame is an association between a dataset and a parameter set
 	function DataFrame(datapath){
@@ -25,14 +27,17 @@ function(is, Data, parameterCollection){
 	}
 
 	DataFrame.prototype.fill = function(cb){
-		//if we need to fill, take the async action, if not, immediately respond
+		var self = this;
+		console.log('filling');
+		return new Promise(function(resolve, reject){
+			//if we need to fill, take the async action, if not, immediately respond
 
-		//get the data
-		//--- --- ---
-		//then inject into Data
-		this._.data = new Data(this._.datapath, ['this', 'is', 'the', 'dataset']);
-
-		cb();
+			//get the data
+			//--- --- ---
+			//then inject into Data wrapper
+			self._.data = new Data(self._.datapath, ['this', 'is', 'the', 'dataset']);
+			resolve(self._.data);
+		});
 	};
 
 	DataFrame.prototype.getData = function(){
@@ -41,14 +46,18 @@ function(is, Data, parameterCollection){
 	
 	//do the parameter values associated with this frame reflect the current param state
 	DataFrame.prototype.parametersValid = function(){
+		//get the parameter keys from  the route attached to the path
+		var paramKeys = this._.datapath._.route.getParameterKeys();
+
 		//go through each of our parameter keys and ensure that each value associated
 		//with this frame is consistent to the current set parameters
-		for(var i = 0; i < this._.paramKeys.length; i++){
-			var paramKey = this._.paramKeys[i];
+		for(var i = 0; i < paramKeys.length; i++){
+			var paramKey = paramKeys[i];
 
 			var p0 = this._.param[paramKey];
 			var p1 = parameterCollection.get(paramKey);
 
+			console.log(p0,p1);
 			if(paramsEqual(p0, p1) === false) return false;
 		}
 
@@ -56,8 +65,11 @@ function(is, Data, parameterCollection){
 	};
 
 	function init(self){
+		//get the parameter keys from  the route attached to the path
+		var paramKeys = self._.datapath._.route.getParameterKeys();
+
 		//grab the most recent param state. That is what this frame will anchor to.
-		self._.paramKeys.forEach(function(paramKey){
+		paramKeys.forEach(function(paramKey){
 			self._.param[paramKey] = parameterCollection.get(paramKey);
 		});
 	}

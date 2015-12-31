@@ -2,6 +2,7 @@ define('path/Path',
 [
 	'util/is',
 	'util/set',
+	
 	'info',
 
 	'./VirtualRoute',
@@ -11,8 +12,7 @@ define('path/Path',
 	'./pipeline/Subset',
 	'./pipeline/Transform',
 
-	'./cache/Cache',
-	'util/Promise'
+	'./cache/Cache'
 ],
 function(is, set, info, VirtualRoute, Filler, Formatter, Subset, Transform, Cache, Promise){
 
