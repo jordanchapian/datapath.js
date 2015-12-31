@@ -18,7 +18,14 @@ module.exports = function(grunt) {
         }
       }
     },
-
+    jsdoc : {
+        dist : {
+            src: ['src/**/*.js'],
+            options: {
+                destination: 'docs/'
+            }
+        }
+    },
     requirejs: {
       compile: {
         options: {
@@ -40,7 +47,9 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('default', ['requirejs']);
   grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('explain', ['jsdoc']);
 };
