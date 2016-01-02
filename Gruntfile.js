@@ -18,6 +18,7 @@ module.exports = function(grunt) {
         }
       }
     },
+
     jsdoc : {
         dist : {
             src: ['src/**/*.js'],
@@ -26,6 +27,7 @@ module.exports = function(grunt) {
             }
         }
     },
+    
     requirejs: {
       compile: {
         options: {
