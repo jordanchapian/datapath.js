@@ -1,2 +1,7 @@
-# datasync
-The Data API State Machine
+# data-path
+The Data API State Machine. Add parameteized data routes, set parameters throughout the lifetime of the application, sync data based on parameter state, cache retrieved datasets based on parameter sets.
+
+## The Problem
+Throughout the lifetime of a data-heavy web application, the application will constantly be fetching datasets (sometimes very large) from the api. Every time data is fetched from the api, a series of opeations are likely performed on the dataset before the data is in a state that is usable by the application. As an example, many d3 charting libraries will require that timeseries data does not contain gaps, and we must iterate over the dataset to ensure that this is the case (depending on the quality of our data.) Another example is to ensure that types returned from our api are as expected (ex: are our dates String primitives and not Date primitives as expected.) We are also likely to produce results from datasets every time we retrieve them. Data-path is designed to focus on heavy operation configuration, and light-weight runtime interaction to perform feature rich, and optimized, interaction with web apis. Data-path provides a caching state machine that will save data and computations from previously fetched parameterized routes. Also, it allows the programmer to configure a data pipeline that data will be passed through as data is fetched from an api.
+
+### Getting Started

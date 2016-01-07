@@ -997,6 +997,11 @@ function(){
 		return Data;
 });
 
+/**
+* Module returning the DataFrame constructor
+*	@module path/cache/data/DataFrame
+*/
+
 define('path/cache/data/DataFrame',
 [
 	'util/is',
@@ -1007,7 +1012,18 @@ define('path/cache/data/DataFrame',
 ],
 function(is, Promise, Data, parameterCollection){
 
-	//the data frame is an association between a dataset and a parameter set
+	/**
+   * @constructor
+   * @alias module:path/cache/data/DataFrame
+   *
+   * @description
+   * The DataFrame is to house data, and the parameters that were associated with
+   * that data. [[DATA] | [PARAMS]]. The cache can use this association
+   * to determine if a particular frame is valid with respect to the current
+   * parameters.
+   *
+   */
+
 	function DataFrame(datapath){
 		//private namespace
 		this._ = {};
@@ -1025,25 +1041,37 @@ function(is, Promise, Data, parameterCollection){
 		init(this);
 	}
 
-	DataFrame.prototype.fill = function(cb){
+	/** 
+	*	Fill the frame with data. This function will use the associated path
+	* to get the resource location, and then use the parameters that 
+	* were associated with this frame when it was created to fill out the
+	* location path.
+	*/
+	DataFrame.prototype.fill = function(){
 		var self = this;
-		console.log('filling');
-		return new Promise(function(resolve, reject){
-			//if we need to fill, take the async action, if not, immediately respond
 
-			//get the data
-			//--- --- ---
-			//then inject into Data wrapper
+		return new Promise(function(resolve, reject){
 			self._.data = new Data(self._.datapath, ['this', 'is', 'the', 'dataset']);
+			
 			resolve(self._.data);
 		});
 	};
 
+	/** 
+	*	Return the data contents of the data frame.
+	*/
 	DataFrame.prototype.getData = function(){
 		return this._.data;
 	};
 	
-	//do the parameter values associated with this frame reflect the current param state
+	/** 
+	*	Reach out to the virtual route of the path, and determine what 
+	* the expected parameters are. Then, reach out to the parameter collection
+	* and see if the parameters associated with this frame match the required
+	* parameters from the path and the state of the parameter collection.
+	*
+	* @return {Boolean} isValid 
+	*/
 	DataFrame.prototype.parametersValid = function(){
 		//get the parameter keys from  the route attached to the path
 		var paramKeys = this._.datapath._.route.getParameterKeys();
@@ -1056,7 +1084,6 @@ function(is, Promise, Data, parameterCollection){
 			var p0 = this._.param[paramKey];
 			var p1 = parameterCollection.get(paramKey);
 
-			console.log(p0,p1);
 			if(paramsEqual(p0, p1) === false) return false;
 		}
 
