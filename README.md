@@ -10,7 +10,7 @@ You can add a datapath by accessing the exposed base function. Just give it a ke
 
 ```javascript
 
-var myFirstDatapath = datapath('myApiRoute');
+var myFirstDatapath = datapath('userTransactions');
 
 ```
 
@@ -18,7 +18,7 @@ var myFirstDatapath = datapath('myApiRoute');
 Now that we have a datapath, we can add a parameterized route to it, so that it can fetch our data. Parameters are specified with the common ":[key]" syntax. For example, below is a route that has three parameters (fromDate, toDate, userid).
 
 ```javascript
-datapath('myapiroute')
+datapath('userTransactions')
 .setRoute('api/user/:userid/transtactions?from=:fromDate&to=:toDate');
 ```
 
@@ -34,5 +34,18 @@ datapath.parameter('userid').set('12sa21');
 //assume the user wants to view the last hour of transactions
 datapath.parameter('fromDate').set(new Date(Date.now() - 3600000));
 datapath.parameter('toDate').set(new Date());
+
+```
+
+### Ensure our dataset is synced
+When we reach a state in our application where we wish for datasets to be synced with respect to the current parameters, we simply call the sync static method. This will check the cache for valid datasets, and reach out to the datapath if required. So, the below promise may be resolved immediately without an http request, or it may have a delay associated with a required http request.
+
+```javascript
+
+//using promises
+datapath.sync('myapiroute')
+.then(function(dataset){
+	//dataset is available here (with respect to current parameter state)
+});
 
 ```
